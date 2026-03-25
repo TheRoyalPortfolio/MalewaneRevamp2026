@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Royale Malewane — Project Dashboard</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ════════════════════════════════════════
@@ -601,166 +603,50 @@ td.suite-name{font-weight:700;color:var(--text-primary);font-size:.88rem;}
 /* ══════════════════════════════════════════
    DATA
 ══════════════════════════════════════════ */
-const TODAY=new Date('2026-03-23');
-const d=s=>new Date(s);
-const daysBetween=(a,b)=>Math.round((b-a)/86400000);
-const fmt=s=>{if(!s)return'—';const dt=new Date(s);return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});};
-const toISO=dt=>dt instanceof Date?dt.toISOString().slice(0,10):dt;
+const TODAY = new Date('2026-03-23');
+const d = s => new Date(s);
+const daysBetween = (a, b) => Math.round((b - a) / 86400000);
+const fmt = s => { if (!s) return '—'; const dt = new Date(s); return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }); };
+const toISO = dt => dt instanceof Date ? dt.toISOString().slice(0, 10) : dt;
 
-const ORIG=[
-  {id:'LS6',name:'Luxury Suite 6',type:'Suite',schedEnd:'2026-04-28',adjEnd:'2026-04-28',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-13',ad:'2026-02-13'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-02-25',ad:'2026-02-25'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-03-21',ad:'2026-03-30'},
-    {n:'Wet Trades & 1st Fix',s:'Completed',sd:'2026-03-09',ad:'2026-04-08'},
-    {n:'Envelope',s:'In Process',sd:'2026-03-30',ad:'2026-03-30'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-04-15',ad:'2026-04-15'},
-    {n:'External Facade',s:'In Process',sd:'2026-04-17',ad:'2026-04-17'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-04-15',ad:'2026-04-30'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-20',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-04-28',ad:'2026-05-15'},
-  ],comments:['Quote sent for approval — floor screeds','Marguerite to comment on floor finish']},
-  {id:'LS5',name:'Luxury Suite 5',type:'Suite',schedEnd:'2026-05-02',adjEnd:'2026-05-02',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-19',ad:'2026-02-19'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-02-28',ad:'2026-02-28'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-03-21',ad:'2026-03-30'},
-    {n:'Wet Trades & 1st Fix',s:'Completed',sd:'2026-03-13',ad:'2026-03-13'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-03',ad:'2026-04-03'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-04-20',ad:'2026-04-20'},
-    {n:'External Facade',s:'In Process',sd:'2026-04-22',ad:'2026-04-22'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-04-20',ad:'2026-04-30'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-04-23',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-02',ad:'2026-05-15'},
-  ],comments:['Quote sent for approval — floor screeds','Marguerite to comment on floor finish']},
-  {id:'LS4',name:'Luxury Suite 4',type:'Suite',schedEnd:'2026-05-07',adjEnd:'2026-05-07',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-23',ad:'2026-02-23'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-03-04',ad:'2026-03-04'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-03-28',ad:'2026-03-30'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-03-18',ad:'2026-04-08'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-08',ad:'2026-04-17'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-04-24',ad:'2026-04-24'},
-    {n:'External Facade',s:'In Process',sd:'2026-04-27',ad:'2026-04-27'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-04-24',ad:'2026-05-30'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-04-28',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-07',ad:'2026-05-07'},
-  ],comments:['Quote sent for approval — floor screeds','Waiting for shower arms to arrive']},
-  {id:'LS3',name:'Luxury Suite 3',type:'Suite',schedEnd:'2026-05-12',adjEnd:'2026-05-12',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-27',ad:'2026-02-27'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-03-07',ad:'2026-03-07'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-04-01',ad:'2026-03-30'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-03-23',ad:'2026-04-20'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-13',ad:'2026-04-17'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-04-29',ad:'2026-04-29'},
-    {n:'External Facade',s:'In Process',sd:'2026-05-01',ad:'2026-05-01'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-04-29',ad:'2026-05-30'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-02',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-12',ad:'2026-05-12'},
-  ],comments:['Waiting for shower arms','Quote sent for approval — floor screeds']},
-  {id:'LS2',name:'Luxury Suite 2',type:'Suite',schedEnd:'2026-05-15',adjEnd:'2026-05-15',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-03-04',ad:'2026-03-04'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-03-17',ad:'2026-03-17'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-04-06',ad:'2026-04-06'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-03-26',ad:'2026-04-20'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-16',ad:'2026-04-16'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-05-02',ad:'2026-05-02'},
-    {n:'External Facade',s:'In Process',sd:'2026-05-05',ad:'2026-05-05'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-05-02',ad:'2026-06-12'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-06',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-15',ad:'2026-05-15'},
-  ],comments:['Waiting for shower arms x2','Marguerite to comment on floor finish']},
-  {id:'RS1',name:'Royal Suite 1',type:'Suite',schedEnd:'2026-05-20',adjEnd:'2026-05-20',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-03-09',ad:'2026-03-09'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-03-14',ad:'2026-03-14'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-04-10',ad:'2026-04-10'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-03-31',ad:'2026-03-31'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-21',ad:'2026-04-21'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-05-07',ad:'2026-05-07'},
-    {n:'External Facade',s:'In Process',sd:'2026-05-09',ad:'2026-05-09'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-05-07',ad:'2026-06-12'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-11',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-20',ad:'2026-05-20'},
-  ],comments:["No delivery date for windows yet","Quote sent for approval — floor screeds","Dirkie to comment on deck"]},
-  {id:'LS7',name:'Luxury Suite 7',type:'Suite',schedEnd:'2026-05-25',adjEnd:'2026-05-25',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-03-13',ad:'2026-03-13'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-03-18',ad:'2026-03-18'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-04-16',ad:'2026-04-16'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-04-04',ad:'2026-04-04'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-25',ad:'2026-04-25'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-05-16',ad:'2026-05-16'},
-    {n:'External Facade',s:'In Process',sd:'2026-05-14',ad:'2026-05-14'},
-    {n:'External Works/Pool',s:'In Process',sd:'2026-05-16',ad:'2026-05-12'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-20',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-29',ad:'2026-05-25'},
-  ],comments:['Vinyl floor specification — confirm with Marguerite','Dirkie to comment on deck']},
-  {id:'RS8',name:'Royal Suite 8',type:'Suite',schedEnd:'2026-05-29',adjEnd:'2026-05-29',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-03-18',ad:'2026-03-18'},
-    {n:'Services',s:'In Process',sd:'2026-04-10',ad:'2026-06-16'},
-    {n:'New Entrance/Courtyard',s:'Completed',sd:'2026-03-21',ad:'2026-03-21'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-04-22',ad:'2026-03-27'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-30',ad:'2026-03-27'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-05-16',ad:'2026-03-27'},
-    {n:'External Facade',s:'In Process',sd:'2026-05-19',ad:'2026-03-27'},
-    {n:'External Works/Deck',s:'In Process',sd:'2026-05-16',ad:'2026-03-21'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-20',ad:'2026-06-15'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-29',ad:'2026-04-07'},
-  ],comments:['Marguerite to comment on floor & paint finishes','Dirkie to comment on deck repairs','Main electrical distribution — HVAC note']},
-  {id:'KITCHEN',name:'BOH Kitchen',type:'Facility',schedEnd:'2026-05-18',adjEnd:'2026-05-18',phases:[
-    {n:'New Structure',s:'Completed',sd:'2026-03-09',ad:'2026-03-09'},
-    {n:'Install Roof',s:'In Process',sd:'2026-03-20',ad:'2026-03-30'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-04-01',ad:'2026-04-01'},
-    {n:'Windows',s:'In Process',sd:'2026-04-07',ad:'2026-04-07'},
-    {n:'Cold Room Panels',s:'In Process',sd:'2026-04-14',ad:'2026-04-14'},
-    {n:'Services to Ceiling',s:'In Process',sd:'2026-04-14',ad:'2026-04-14'},
-    {n:'Ceiling & 2nd Fix',s:'In Process',sd:'2026-04-18',ad:'2026-04-18'},
-    {n:'Tiling & Final Trades',s:'In Process',sd:'2026-04-28',ad:'2026-04-28'},
-    {n:'Final Paint & Snag',s:'In Process',sd:'2026-05-18',ad:'2026-05-18'},
-  ],comments:['⚠ DRAWINGS NEEDED URGENTLY — services to ceiling void','Parapet brickwork complete; extension not started']},
-  {id:'SPA',name:'Spa',type:'Facility',schedEnd:'2026-05-25',adjEnd:'2026-05-25',phases:[
-    {n:'Scope Confirmed',s:'Completed',sd:'2026-02-13',ad:'2026-02-13'},
-    {n:'Demolition Works',s:'Completed',sd:'2026-03-14',ad:'2026-03-14'},
-    {n:'Gym Finishes',s:'In Process',sd:'2026-04-13',ad:'2026-04-13'},
-    {n:'Sauna / Cold Plunge',s:'In Process',sd:'2026-05-12',ad:'2026-05-12'},
-    {n:'Pool Works',s:'In Process',sd:'2026-05-12',ad:'2026-05-12'},
-    {n:'Pool Tiling & Fill',s:'In Process',sd:'2026-05-24',ad:'2026-05-24'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-25',ad:'2026-05-25'},
-  ],comments:[]},
-  {id:'DINING',name:'Main Dining Area',type:'Facility',schedEnd:'2026-05-07',adjEnd:'2026-05-07',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-20',ad:'2026-02-20'},
-    {n:'Wet Trades & 1st Fix',s:'Completed',sd:'2026-03-09',ad:'2026-03-09'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-03-25',ad:'2026-04-15'},
-    {n:'Finishes',s:'In Process',sd:'2026-04-21',ad:'2026-04-21'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-07',ad:'2026-05-07'},
-  ],comments:['Sand & thatch installation ongoing','1st fix services to walls in process']},
-  {id:'SHOP',name:'New Shop',type:'Facility',schedEnd:'2026-05-29',adjEnd:'2026-05-29',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-19',ad:'2026-02-19'},
-    {n:'Structure / Foundations',s:'Completed',sd:'2026-04-04',ad:'2026-04-04'},
-    {n:'Roof Structure',s:'In Process',sd:'2026-04-25',ad:'2026-04-25'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-04-24',ad:'2026-04-24'},
-    {n:'Envelope',s:'In Process',sd:'2026-05-01',ad:'2026-05-01'},
-    {n:'Internal Finishes',s:'In Process',sd:'2026-05-20',ad:'2026-05-20'},
-    {n:'External Facade',s:'In Process',sd:'2026-05-20',ad:'2026-05-20'},
-    {n:'MEP Commissioning',s:'In Process',sd:'2026-05-25',ad:'2026-05-25'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-29',ad:'2026-05-29'},
-  ],comments:['Schedule sent to Aluview for window pricing','Construction drawings not yet issued']},
-  {id:'BOMA',name:'Obs. Lounge / Boma',type:'Facility',schedEnd:'2026-05-29',adjEnd:'2026-05-29',phases:[
-    {n:'Demolition Works',s:'Completed',sd:'2026-02-26',ad:'2026-02-26'},
-    {n:'New Slab Edges',s:'Completed',sd:'2026-04-03',ad:'2026-04-03'},
-    {n:'Wet Trades & 1st Fix',s:'In Process',sd:'2026-04-18',ad:'2026-04-18'},
-    {n:'Envelope',s:'In Process',sd:'2026-04-27',ad:'2026-04-27'},
-    {n:'Finishes',s:'In Process',sd:'2026-05-16',ad:'2026-05-16'},
-    {n:'Roof Top Works',s:'In Process',sd:'2026-05-16',ad:'2026-05-16'},
-    {n:"Builder's Clean & Snag",s:'In Process',sd:'2026-05-29',ad:'2026-05-29'},
-  ],comments:["No delivery date confirmed yet for aluminium windows — on critical path"]},
-];
+// ==================== FIREBASE CONFIG ====================
+// ← PASTE YOUR CONFIG HERE (from Firebase Project Settings)
+const firebaseConfig = {
+  apiKey: "AIzaSyA6PrNQXcdHp_4gKd6EyxEDt19W4Ilim0M",
+  authDomain: "rmlrevamp2026.firebaseapp.com",
+  databaseURL: "https://rmlrevamp2026-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "rmlrevamp2026",
+  storageBucket: "rmlrevamp2026.firebasestorage.app",
+  messagingSenderId: "221500385252",
+  appId: "1:221500385252:web:c57b158fcfd041cb4bc9f1",
+  measurementId: "G-FBFBVDQ5NN"
+};
 
-let areas=JSON.parse(JSON.stringify(ORIG));
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dataRef = db.ref('royale-malewane');
+
+let areas = [];
+let alertItems = [];
+let ORIG = [];
+
+// Load data from Firebase (live updates)
+dataRef.on('value', (snapshot) => {
+  const data = snapshot.val() || { areas: [], alerts: [], orig: [] };
+  areas = data.areas || [];
+  alertItems = data.alerts || [];
+  ORIG = data.orig || JSON.parse(JSON.stringify(areas));
+  renderAll(); saveToFirebase();;
+});
+
+// Save changes to Firebase
+function saveToFirebase() {
+  dataRef.set({
+    areas: areas,
+    alerts: alertItems,
+    orig: ORIG
+  });
+}
 
 /* ══════════════════════════════════════════
    HELPERS
@@ -1163,7 +1049,7 @@ function handleInlineChange(inp,areaId){
   area.adjEnd=val;
   // push to last phase date
   const lp=area.phases[area.phases.length-1];if(lp)lp.ad=val;
-  renderAll(); // sorts areas and phases
+  renderAll(); saveToFirebase();; // sorts areas and phases
   if(document.getElementById('areaSelect').value===areaId)populatePanel(areaId);
   toast('↕ '+area.name+' re-sorted to '+fmt(val));
 }
@@ -1251,7 +1137,7 @@ function setAreaField(id,field,val,el){
   area[field]=val;
   if(orig) el.classList.toggle('changed',val!==orig[field]);
   if(field==='adjEnd'){const lp=area.phases[area.phases.length-1];if(lp)lp.ad=val;}
-  renderAll();toast('✓ Updated');
+  renderAll(); saveToFirebase();;toast('✓ Updated');
 }
 function setPhaseDate(id,idx,val,el){
   if(!val)return;
@@ -1260,19 +1146,19 @@ function setPhaseDate(id,idx,val,el){
   area.phases[idx].ad=val;
   if(orig) el.classList.toggle('changed',val!==orig?.phases[idx]?.ad);
   syncAreaEnd(area);
-  renderAll(); // renderAll sorts phases & areas, panel must refresh after
+  renderAll(); saveToFirebase();; // renderAll sorts phases & areas, panel must refresh after
   populatePanel(id);
   toast('↕ Date updated & re-sorted chronologically');
 }
 function setPhaseName(id,idx,val){
   const area=areas.find(a=>a.id===id);
   area.phases[idx].n=val;
-  renderAll();
+  renderAll(); saveToFirebase();;
 }
 function setPhaseStatus(id,idx,val){
   const area=areas.find(a=>a.id===id);
   area.phases[idx].s=val;
-  renderAll();populatePanel(id);toast('✓ Status updated');
+  renderAll(); saveToFirebase();;populatePanel(id);toast('✓ Status updated');
 }
 
 /* ── REMOVE PHASE ── */
@@ -1285,7 +1171,7 @@ function removePhase(areaId,idx){
     ()=>{
       area.phases.splice(idx,1);
       syncAreaEnd(area);
-      renderAll();
+      renderAll(); saveToFirebase();;
       populatePanel(areaId);
       toast('✓ Task removed');
     }
@@ -1303,7 +1189,7 @@ function deleteArea(areaId){
       rebuildPanelSelect('');
       if(areas.length>0) populatePanel(areas[0].id);
       else document.getElementById('epFields').innerHTML='<p style="font-size:.82rem;color:#5A6480;text-align:center;padding:2rem 0;">No areas. Use + Area to add one.</p>';
-      renderAll();
+      renderAll(); saveToFirebase();;
       toast('✓ Area removed');
     }
   );
@@ -1334,7 +1220,7 @@ document.getElementById('btnConfirmAddPhase').addEventListener('click',()=>{
   area.phases.push({n:nm,s:st,sd:sd||ad,ad});
   syncAreaEnd(area);
   document.getElementById('addPhaseModal').classList.remove('show');
-  renderAll(); // sorts phases chronologically after add
+  renderAll(); saveToFirebase();; // sorts phases chronologically after add
   populatePanel(_addPhaseTargetId);
   toast('✓ Task "'+nm+'" added & sorted into '+area.name);
 });
@@ -1393,14 +1279,14 @@ document.getElementById('btnConfirmAddArea').addEventListener('click',()=>{
   areas.push(newArea);
 
   document.getElementById('addAreaModal').classList.remove('show');
-  renderAll(); // sorts phases and areas first
+  renderAll(); saveToFirebase();; // sorts phases and areas first
   rebuildPanelSelect(rawId);
   populatePanel(rawId); // then populate with sorted data
   toast('✓ "'+name+'" added & sorted into programme');
 });
 
 document.getElementById('btnApply').addEventListener('click',()=>{
-  renderAll();
+  renderAll(); saveToFirebase();;
   const id=document.getElementById('areaSelect').value;
   if(id) populatePanel(id);
   toast('✓ All changes applied & re-sorted');
@@ -1411,7 +1297,7 @@ document.getElementById('btnReset').addEventListener('click',()=>{
   if(!origArea){toast('⚠ New areas cannot be reset (no original)');return;}
   const i=areas.findIndex(a=>a.id===id);
   areas[i]=JSON.parse(JSON.stringify(origArea));
-  renderAll(); // sorts after reset
+  renderAll(); saveToFirebase();; // sorts after reset
   populatePanel(id);
   toast('↺ Area reset to original dates & re-sorted');
 });
@@ -1472,7 +1358,7 @@ function toast(msg){
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
-renderAll();
+renderAll(); saveToFirebase();;
 </script>
 </body>
 </html>
