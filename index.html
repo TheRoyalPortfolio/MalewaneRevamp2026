@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Malewane — Construction Programme</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   THE ROYAL PORTFOLIO — PROGRAMME DASHBOARD
+   Brand: Slate · Champagne Gold · Ivory
+═══════════════════════════════════════════ */
+:root{
+  --slate:#2C2C2C;
+  --slate-mid:#3D3D3D;
+  --slate-light:#5A5A5A;
+  --gold:#B8973A;
+  --gold-light:#D4AF5A;
+  --gold-pale:#F5EED8;
+  --ivory:#FDFBF7;
+  --cream:#F7F4EE;
+  --warm-white:#FFFFFF;
+  --border:#DDD8CE;
+  --border-light:#EDE9E1;
+  --text-primary:#1E1E1E;
+  --text-body:#3D3D3D;
+  --text-secondary:#6B6560;
+  --text-muted:#9E9891;
+  --green:#1E6641;
+  --green-bg:#EAF5EE;
+  --amber:#8B5E00;
+  --amber-bg:#FDF3E0;
+  --red:#A01919;
+  --red-bg:#FAEAEA;
+  --blue:#1A3D6E;
+  --blue-bg:#EBF0F8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--text-body);font-family:'Montserrat',sans-serif;font-weight:400;font-size:14px;min-height:100vh;overflow-x:hidden;line-height:1.6;}
+
+/* ── FIREBASE LOADING ── */
+#fb-loading{position:fixed;inset:0;background:var(--slate);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;}
+#fb-loading img{width:180px;opacity:.9;}
+#fb-loading p{font-family:'Montserrat',sans-serif;font-size:.68rem;color:rgba(255,255,255,.45);letter-spacing:.18em;text-transform:uppercase;}
+.fb-spinner{width:32px;height:32px;border:2px solid rgba(184,151,58,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#fb-status{position:fixed;bottom:1rem;right:1.2rem;font-family:'DM Mono',monospace;font-size:.6rem;padding:.28rem .7rem;border-radius:2px;z-index:400;opacity:0;transition:opacity .4s;pointer-events:none;letter-spacing:.04em;}
+#fb-status.online{background:var(--green-bg);border:1px solid rgba(30,102,65,.3);color:var(--green);opacity:1;}
+#fb-status.offline{background:var(--red-bg);border:1px solid rgba(160,25,25,.3);color:var(--red);opacity:1;}
+#fb-status.saving{background:var(--gold-pale);border:1px solid rgba(184,151,58,.4);color:var(--amber);opacity:1;}
+
+/* ── HEADER ── */
+.header{background:var(--slate);border-bottom:1px solid rgba(184,151,58,.3);padding:0;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.25);}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;flex-wrap:wrap;gap:.8rem;}
+.header-logo{display:flex;align-items:center;gap:1.2rem;}
+.header-logo img{height:42px;filter:brightness(0) invert(1);opacity:.92;}
+.header-logo-divider{width:1px;height:36px;background:rgba(184,151,58,.35);}
+.header-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--ivory);letter-spacing:.06em;}
+.header-title span{display:block;font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:400;color:rgba(255,255,255,.45);letter-spacing:.16em;text-transform:uppercase;margin-top:.1rem;}
+.header-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+.header-meta{font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.4);letter-spacing:.06em;text-align:right;}
+.header-meta .pc-date{color:var(--gold-light);font-size:.7rem;display:block;}
+#saveIndicator{display:none;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-light);background:rgba(184,151,58,.12);border:1px solid rgba(184,151,58,.25);padding:.22rem .65rem;border-radius:2px;white-space:nowrap;}
+.header-strip{background:rgba(184,151,58,.08);border-top:1px solid rgba(184,151,58,.15);padding:.4rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.header-strip-left{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.strip-item{font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.45);letter-spacing:.06em;}
+.strip-item strong{color:var(--gold-light);}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem 1rem;border-radius:2px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;cursor:pointer;border:none;transition:all .2s;letter-spacing:.04em;}
+.btn-gold{background:var(--gold);color:var(--slate);border:1px solid var(--gold);}
+.btn-gold:hover{background:var(--gold-light);}
+.btn-ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18);}
+.btn-ghost:hover,.btn-ghost.active{background:rgba(255,255,255,.14);color:#fff;}
+.btn-outline{background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:2px;}
+.btn-outline:hover{background:var(--gold-pale);color:var(--amber);border-color:var(--gold);}
+.btn-save{background:var(--green);color:#fff;border:1px solid var(--green);}
+.btn-save:hover{background:#175535;}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(160,25,25,.2);}
+.btn-danger:hover{background:var(--red);color:#fff;}
+
+/* ── EDIT BANNER ── */
+.edit-banner{display:none;background:rgba(184,151,58,.08);border-bottom:1px solid rgba(184,151,58,.25);padding:.55rem 2.5rem;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:var(--gold-light);letter-spacing:.04em;}
+.edit-banner.show{display:block;}
+
+/* ── MAIN LAYOUT ── */
+.main{padding:1.8rem 2.5rem;max-width:1800px;margin:0 auto;}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin-bottom:2rem;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.stat-cell{background:var(--warm-white);padding:1.1rem 1.3rem;transition:background .15s;}
+.stat-cell:hover{background:var(--gold-pale);}
+.stat-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.4rem;}
+.stat-value{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;line-height:1;color:var(--text-primary);}
+.stat-sub{font-size:.65rem;color:var(--text-muted);margin-top:.2rem;}
+.stat-value.gold{color:var(--gold);}
+.stat-value.danger{color:var(--red);}
+.stat-value.green{color:var(--green);}
+
+/* ── SECTION TITLE ── */
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;letter-spacing:.04em;color:var(--text-primary);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.7rem;}
+.section-title::before{content:'';display:inline-block;width:3px;height:1.1em;background:var(--gold);border-radius:1px;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.section-header .section-title{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;background:var(--warm-white);border:1px solid var(--border);border-radius:3px;margin-bottom:2rem;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+thead th{font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);padding:.85rem 1rem;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border-light);transition:background .12s;}
+tbody tr:hover{background:var(--gold-pale);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:.7rem 1rem;color:var(--text-body);vertical-align:middle;font-size:.82rem;}
+td.mono{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text-secondary);}
+td.area-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;color:var(--text-primary);}
+
+/* ── EDITABLE DATE CELLS ── */
+.date-cell{display:flex;align-items:center;gap:.3rem;min-width:90px;}
+.date-display{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text-secondary);transition:color .15s;}
+.edit-mode .date-display{cursor:pointer;border-bottom:1px dashed var(--gold);padding-bottom:1px;}
+.edit-mode .date-display:hover{color:var(--gold);}
+.date-input{display:none;background:var(--warm-white);border:1px solid var(--gold);color:var(--text-primary);padding:.2rem .4rem;font-family:'DM Mono',monospace;font-size:.72rem;border-radius:2px;width:118px;}
+.edit-pencil{display:none;font-size:.6rem;color:var(--gold);opacity:.7;}
+.edit-mode .edit-pencil{display:inline;}
+.changed-flag{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;display:none;}
+.changed .changed-flag{display:inline-block;}
+.changed .date-display{color:var(--gold);}
+
+/* ── TAGS ── */
+.tag{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.03em;}
+.tag-done{background:var(--green-bg);color:var(--green);}
+.tag-active{background:var(--amber-bg);color:var(--amber);}
+.tag-late{background:var(--red-bg);color:var(--red);}
+.tag-suite{background:var(--blue-bg);color:var(--blue);}
+.tag-fac{background:var(--gold-pale);color:var(--amber);}
+
+/* ── MINI BAR ── */
+.mini-bar{display:flex;align-items:center;gap:.5rem;}
+.mini-track{flex:1;height:7px;background:var(--border-light);border-radius:3px;min-width:80px;overflow:hidden;border:1px solid var(--border);}
+.mini-fill{height:100%;border-radius:3px;transition:width .5s;}
+.mf-done{background:var(--green);}
+.mf-prog{background:var(--gold);}
+.mf-late{background:var(--red);}
+.mini-pct{font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;color:var(--text-secondary);width:30px;text-align:right;}
+
+/* ── AREA CARDS ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.3rem;margin-bottom:2rem;}
+.card{background:var(--warm-white);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:transform .2s,box-shadow .2s;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.card:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.09);}
+.card-header{padding:.9rem 1.3rem .85rem;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border-light);background:var(--cream);}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--text-primary);}
+.card-sub{font-family:'Montserrat',sans-serif;font-size:.6rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.15rem;}
+.card-badge{font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;padding:.2rem .65rem;border-radius:20px;flex-shrink:0;}
+.badge-ip{background:var(--amber-bg);color:var(--amber);}
+.badge-ok{background:var(--green-bg);color:var(--green);}
+.badge-late{background:var(--red-bg);color:var(--red);}
+.card-body{padding:1rem 1.3rem;}
+.prog-label{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;color:var(--text-muted);margin-bottom:.35rem;}
+.prog-track{height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;margin-bottom:1rem;border:1px solid var(--border);}
+.prog-fill{height:100%;border-radius:4px;transition:width .6s;}
+.fill-done{background:var(--green);}
+.fill-prog{background:var(--gold);}
+.fill-late{background:var(--red);}
+
+/* ── MAIN TASK & SUBTASK TREE ── */
+.task-tree{display:flex;flex-direction:column;gap:.2rem;}
+.main-task{border:1px solid var(--border-light);border-radius:2px;overflow:hidden;margin-bottom:.3rem;}
+.main-task-header{display:flex;align-items:center;padding:.42rem .6rem;background:var(--cream);cursor:pointer;gap:.5rem;transition:background .15s;}
+.main-task-header:hover{background:var(--gold-pale);}
+.task-toggle{font-size:.7rem;color:var(--gold);width:14px;flex-shrink:0;transition:transform .2s;}
+.task-toggle.open{transform:rotate(90deg);}
+.main-task-name{flex:1;font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:600;color:var(--text-primary);}
+.main-task-date{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text-secondary);flex-shrink:0;}
+.main-task-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.subtasks{display:none;border-top:1px solid var(--border-light);}
+.subtasks.open{display:block;}
+.subtask-row{display:flex;align-items:center;padding:.32rem .6rem .32rem 1.6rem;border-bottom:1px solid var(--border-light);gap:.45rem;}
+.subtask-row:last-child{border-bottom:none;}
+.subtask-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.subtask-name{flex:1;font-size:.74rem;color:var(--text-body);}
+.subtask-date{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text-muted);flex-shrink:0;}
+/* dot colours */
+.dot-done{background:var(--green);}
+.dot-active{background:var(--gold);}
+.dot-late{background:var(--red);}
+.dot-pending{background:#9B9B9B;}
+.dot-hold{background:#8B6FBE;}
+.dot-snagged{background:#1A7AB8;}
+.dot-cancelled{background:#C0C0C0;}
+
+.card-footer{padding:.65rem 1.3rem;background:var(--cream);font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text-muted);display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+.card-footer strong{color:var(--gold);}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:1.3rem;flex-wrap:wrap;align-items:center;margin-bottom:.85rem;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:500;color:var(--text-muted);}
+.legend-item{display:flex;align-items:center;gap:.35rem;}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── OPEN ITEMS / COMMENTS ── */
+.comments-section{margin-bottom:2rem;}
+.comment-card{background:var(--warm-white);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:0 3px 3px 0;padding:1rem 1.2rem;margin-bottom:.7rem;box-shadow:0 1px 3px rgba(0,0,0,.04);position:relative;}
+.comment-card.priority-high{border-left-color:var(--red);}
+.comment-card.priority-medium{border-left-color:var(--amber);}
+.comment-card.priority-low{border-left-color:var(--green);}
+.comment-card.priority-info{border-left-color:var(--blue);}
+.comment-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem;margin-bottom:.45rem;}
+.comment-meta{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+.comment-priority{font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:700;padding:.15rem .55rem;border-radius:20px;text-transform:uppercase;letter-spacing:.05em;}
+.priority-high .comment-priority{background:var(--red-bg);color:var(--red);}
+.priority-medium .comment-priority{background:var(--amber-bg);color:var(--amber);}
+.priority-low .comment-priority{background:var(--green-bg);color:var(--green);}
+.priority-info .comment-priority{background:var(--blue-bg);color:var(--blue);}
+.comment-area{font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:600;color:var(--text-primary);}
+.comment-text{font-size:.82rem;color:var(--text-body);line-height:1.55;margin-bottom:.5rem;}
+.comment-footer{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+.comment-footer-item{font-family:'Montserrat',sans-serif;font-size:.65rem;color:var(--text-muted);}
+.comment-footer-item strong{color:var(--text-secondary);font-weight:600;}
+.comment-timestamp{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-muted);margin-left:auto;}
+.comment-actions{display:flex;gap:.3rem;flex-shrink:0;}
+.btn-comment-del{background:none;border:none;cursor:pointer;font-size:.78rem;padding:.18rem .32rem;border-radius:2px;color:var(--red);transition:all .15s;opacity:.4;}
+.btn-comment-del:hover{background:var(--red-bg);opacity:1;}
+.add-comment-form{background:var(--warm-white);border:1px solid var(--border);border-radius:3px;padding:1.3rem;margin-bottom:1rem;}
+.add-comment-form h4{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:1rem;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin-bottom:.7rem;}
+.form-field label{display:block;font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.25rem;}
+.form-field input,.form-field select,.form-field textarea{width:100%;background:var(--cream);border:1px solid var(--border);color:var(--text-primary);padding:.45rem .65rem;font-family:'Montserrat',sans-serif;font-size:.8rem;border-radius:2px;transition:border-color .2s;}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(184,151,58,.12);}
+.form-field textarea{resize:vertical;line-height:1.5;}
+.form-field-full{grid-column:1/-1;}
+
+/* ── GANTT ── */
+.gantt-wrap{padding:1.1rem 1.2rem 1rem;min-width:700px;position:relative;}
+.gantt-row{display:flex;align-items:center;margin-bottom:5px;}
+.gantt-label{width:200px;padding-right:12px;font-size:.72rem;font-weight:500;color:var(--text-body);text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gantt-track{flex:1;height:16px;background:var(--border-light);border-radius:2px;position:relative;margin-right:10px;border:1px solid var(--border);}
+.gantt-bar{position:absolute;top:2px;height:12px;border-radius:2px;transition:left .5s,width .5s;}
+.gantt-today-line{position:absolute;top:-2px;width:2px;height:calc(100% + 4px);background:var(--red);z-index:2;opacity:.6;}
+.gantt-end-label{width:55px;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;color:var(--text-muted);flex-shrink:0;}
+.gantt-month-hdr{display:flex;margin-left:200px;margin-right:65px;margin-bottom:.4rem;position:relative;height:18px;}
+.gantt-today-label{position:absolute;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:.58rem;font-weight:700;color:var(--red);letter-spacing:.06em;}
+.gantt-today-overlay{position:absolute;top:0;bottom:0;width:2px;background:var(--red);opacity:.25;pointer-events:none;z-index:1;}
+.gantt-today-flag{position:absolute;top:-1px;transform:translateX(-50%);background:var(--red);color:#fff;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:700;padding:.15rem .45rem;border-radius:2px;letter-spacing:.06em;white-space:nowrap;z-index:2;}
+
+/* ── EDIT PANEL ── */
+.edit-panel{display:none;position:fixed;top:0;right:0;width:430px;height:100vh;background:var(--warm-white);border-left:1px solid var(--border);z-index:500;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.1);flex-direction:column;}
+.edit-panel.open{display:flex;}
+.ep-header{padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--slate);position:sticky;top:0;z-index:2;}
+.ep-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--ivory);}
+.ep-close{background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:1.1rem;padding:.2rem .35rem;transition:color .2s;}
+.ep-close:hover{color:#fff;}
+.ep-body{padding:1.3rem;flex:1;background:var(--cream);}
+.ep-area-sel{width:100%;background:var(--warm-white);border:1px solid var(--border);color:var(--text-primary);padding:.48rem .65rem;font-family:'Montserrat',sans-serif;font-size:.78rem;border-radius:2px;cursor:pointer;}
+.ep-area-sel:focus{outline:none;border-color:var(--gold);}
+.ep-group{margin-bottom:1.1rem;}
+.ep-group-title{font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.55rem;padding-bottom:.28rem;border-bottom:1px solid var(--border);}
+.ep-field{margin-bottom:.6rem;}
+.ep-field label{display:block;font-family:'Montserrat',sans-serif;font-size:.63rem;font-weight:600;color:var(--text-secondary);margin-bottom:.22rem;}
+.ep-field input[type=date],.ep-field input[type=text],.ep-field select{width:100%;background:var(--warm-white);border:1px solid var(--border);color:var(--text-primary);padding:.4rem .55rem;font-family:'DM Mono',monospace;font-size:.75rem;border-radius:2px;transition:border-color .2s;}
+.ep-field input:focus,.ep-field select:focus{outline:none;border-color:var(--gold);}
+.ep-field input.changed{border-color:var(--gold);color:var(--amber);}
+.ep-actions{padding:.9rem 1.3rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem;position:sticky;bottom:0;background:var(--warm-white);}
+.ep-actions-row{display:flex;gap:.5rem;}
+.ep-actions-row .btn{flex:1;justify-content:center;}
+.ep-note{font-family:'Montserrat',sans-serif;font-size:.6rem;color:var(--text-muted);text-align:center;padding-top:.15rem;}
+
+/* Task rows in panel */
+.ep-task-row{border:1px solid var(--border);border-radius:2px;margin-bottom:.5rem;overflow:hidden;}
+.ep-task-header{display:flex;align-items:center;gap:.4rem;padding:.4rem .55rem;background:var(--cream);cursor:default;}
+.ep-task-type{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;padding:.1rem .4rem;border-radius:2px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;}
+.type-main{background:var(--blue-bg);color:var(--blue);}
+.type-sub{background:var(--gold-pale);color:var(--amber);}
+.ep-task-name-inp{flex:1;background:var(--warm-white);border:1px solid var(--border);color:var(--text-primary);padding:.25rem .4rem;font-family:'Montserrat',sans-serif;font-size:.74rem;border-radius:2px;}
+.ep-task-name-inp:focus{outline:none;border-color:var(--gold);}
+.ep-task-controls{display:flex;align-items:center;gap:.3rem;padding:.3rem .55rem;background:var(--warm-white);flex-wrap:wrap;}
+.ep-task-date{flex:1;min-width:0;background:var(--warm-white);border:1px solid var(--border);color:var(--text-primary);padding:.28rem .4rem;font-family:'DM Mono',monospace;font-size:.68rem;border-radius:2px;}
+.ep-task-date:focus{outline:none;border-color:var(--gold);}
+.ep-task-date:disabled{background:var(--cream);color:var(--text-muted);cursor:default;font-style:italic;}
+.ep-task-status{background:var(--warm-white);border:1px solid var(--border);color:var(--text-secondary);padding:.25rem .35rem;font-family:'Montserrat',sans-serif;font-size:.65rem;border-radius:2px;cursor:pointer;}
+.ep-task-status:focus{outline:none;border-color:var(--gold);}
+.ep-task-type-sel{background:var(--warm-white);border:1px solid var(--border);color:var(--text-secondary);padding:.25rem .35rem;font-family:'Montserrat',sans-serif;font-size:.65rem;border-radius:2px;cursor:pointer;}
+.ep-task-type-sel:focus{outline:none;border-color:var(--gold);}
+.btn-rm-task{background:var(--red-bg);border:1px solid rgba(160,25,25,.2);color:var(--red);font-size:.65rem;padding:.22rem .4rem;border-radius:2px;cursor:pointer;flex-shrink:0;transition:all .18s;line-height:1;font-weight:700;}
+.btn-rm-task:hover{background:var(--red);color:#fff;}
+.btn-add-task{width:100%;background:var(--warm-white);border:1px dashed var(--border);color:var(--text-muted);padding:.42rem;border-radius:2px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:500;transition:all .18s;margin-top:.3rem;}
+.btn-add-task:hover{background:var(--gold-pale);color:var(--amber);border-color:var(--gold);}
+.ep-divider{height:1px;background:var(--border);margin:1rem 0;}
+.btn-del-area{width:100%;background:var(--red-bg);border:1px solid rgba(160,25,25,.2);color:var(--red);padding:.42rem;border-radius:2px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:600;transition:all .18s;margin-top:.3rem;}
+.btn-del-area:hover{background:var(--red);color:#fff;}
+
+/* ── DRAG TO REORDER TASKS ── */
+.ep-task-row{cursor:default;}
+.ep-drag-handle{cursor:grab;color:var(--text-muted);font-size:.9rem;padding:.2rem .3rem;flex-shrink:0;user-select:none;line-height:1;transition:color .15s;touch-action:none;}
+.ep-drag-handle:hover{color:var(--gold);}
+.ep-drag-handle:active{cursor:grabbing;color:var(--gold);}
+.ep-task-row.drag-over{border:2px dashed var(--gold);background:var(--gold-pale);}
+.ep-task-row.dragging{opacity:.4;border:2px dashed var(--border);}
+.ep-task-name-inp,.ep-task-date,.ep-task-status,.ep-task-type-sel,.btn-rm-task{-webkit-user-drag:none;}
+.ep-tasks-list{display:flex;flex-direction:column;}
+
+/* ── PASSWORD MODAL ── */
+.pw-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.pw-overlay.show{display:flex;}
+.pw-box{background:var(--warm-white);border:1px solid var(--border);border-radius:3px;padding:2.5rem 2.4rem 2.2rem;width:380px;max-width:94vw;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.25);}
+.pw-logo{margin-bottom:.8rem;}
+.pw-logo img{height:40px;filter:none;}
+.pw-divider{width:40px;height:1px;background:var(--gold);margin:.8rem auto;}
+.pw-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text-primary);margin-bottom:.2rem;}
+.pw-sub{font-family:'Montserrat',sans-serif;font-size:.65rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.6rem;}
+.pw-label{font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;color:var(--text-secondary);letter-spacing:.06em;text-align:left;display:block;margin-bottom:.3rem;}
+.pw-input-wrap{position:relative;margin-bottom:.5rem;}
+.pw-input{width:100%;background:var(--cream);border:1px solid var(--border);color:var(--text-primary);padding:.55rem 2.6rem .55rem .9rem;font-family:'DM Mono',monospace;font-size:.85rem;border-radius:2px;letter-spacing:.04em;transition:border-color .2s;}
+.pw-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(184,151,58,.1);}
+.pw-input.shake{animation:shake .35s ease;}
+.pw-toggle{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;padding:.1rem .2rem;transition:color .2s;}
+.pw-toggle:hover{color:var(--gold);}
+.pw-error{font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:500;color:var(--red);min-height:1.1rem;margin-bottom:.8rem;}
+.pw-btn{width:100%;background:var(--slate);border:none;color:#fff;padding:.6rem;border-radius:2px;font-family:'Montserrat',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.06em;}
+.pw-btn:hover{background:var(--gold);}
+.pw-hint{font-family:'Montserrat',sans-serif;font-size:.65rem;color:var(--text-muted);margin-top:1rem;}
+.pw-session{display:none;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;color:var(--green);margin-top:.8rem;}
+.pw-session.show{display:block;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* ── MODALS ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:700;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--warm-white);border:1px solid var(--border);border-radius:3px;padding:1.8rem;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.18);}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--text-primary);margin-bottom:.2rem;}
+.modal-sub{font-family:'Montserrat',sans-serif;font-size:.7rem;color:var(--text-muted);margin-bottom:1.2rem;}
+.modal-field{margin-bottom:.85rem;}
+.modal-field label{display:block;font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;color:var(--text-secondary);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.05em;}
+.modal-field input[type=text],.modal-field input[type=date],.modal-field select,.modal-field textarea{width:100%;background:var(--cream);border:1px solid var(--border);color:var(--text-primary);padding:.45rem .65rem;font-family:'Montserrat',sans-serif;font-size:.8rem;border-radius:2px;transition:border-color .2s;}
+.modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(184,151,58,.1);}
+.modal-field select option{background:var(--warm-white);}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.modal-phases-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem;}
+.modal-task-item{display:flex;gap:.45rem;align-items:center;}
+.modal-task-item input[type=text]{flex:2;background:var(--cream);border:1px solid var(--border);color:var(--text-primary);padding:.35rem .5rem;font-family:'Montserrat',sans-serif;font-size:.78rem;border-radius:2px;}
+.modal-task-item input[type=date]{flex:1.4;background:var(--cream);border:1px solid var(--border);color:var(--text-primary);padding:.35rem .45rem;font-family:'DM Mono',monospace;font-size:.7rem;border-radius:2px;}
+.modal-task-item select{background:var(--cream);border:1px solid var(--border);color:var(--text-secondary);padding:.3rem .4rem;font-family:'Montserrat',sans-serif;font-size:.68rem;border-radius:2px;}
+.modal-task-item input:focus,.modal-task-item select:focus{outline:none;border-color:var(--gold);}
+.modal-task-item .btn-rm-task{flex-shrink:0;}
+.modal-add-task-btn{width:100%;background:var(--cream);border:1px dashed var(--border);color:var(--text-muted);padding:.4rem;border-radius:2px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:500;transition:all .18s;margin-top:.3rem;}
+.modal-add-task-btn:hover{background:var(--gold-pale);color:var(--amber);}
+.modal-section-title{font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin:1rem 0 .5rem;padding-bottom:.28rem;border-bottom:1px solid var(--border);}
+.modal-btn-row{display:flex;gap:.6rem;margin-top:1.4rem;}
+.modal-btn-row .btn{flex:1;justify-content:center;}
+
+/* ── PDF OVERLAY ── */
+.pdf-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;align-items:center;justify-content:center;}
+.pdf-overlay.show{display:flex;}
+.pdf-modal{background:var(--warm-white);border:1px solid var(--border);border-radius:3px;padding:1.8rem;width:380px;max-width:94vw;box-shadow:0 16px 48px rgba(0,0,0,.18);}
+.pdf-modal h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:.25rem;}
+.pdf-modal p{font-size:.75rem;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.6;}
+.pdf-option{display:flex;align-items:flex-start;gap:.65rem;padding:.6rem .8rem;margin-bottom:.4rem;background:var(--cream);border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all .18s;}
+.pdf-option:hover{border-color:var(--gold);background:var(--gold-pale);}
+.pdf-option input{accent-color:var(--gold);margin-top:3px;flex-shrink:0;}
+.pdf-option-label{font-size:.8rem;font-weight:600;color:var(--text-primary);}
+.pdf-option-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text-muted);}
+.pdf-btn-row{display:flex;gap:.6rem;margin-top:1.1rem;}
+.pdf-btn-row .btn{flex:1;justify-content:center;}
+
+/* ── CONFIRM MODAL ── */
+.confirm-modal{text-align:center;}
+.confirm-modal h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--text-primary);margin-bottom:.3rem;}
+.confirm-modal p{font-size:.8rem;color:var(--text-muted);margin:1rem 0 1.5rem;line-height:1.6;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--slate);border:1px solid rgba(184,151,58,.3);color:var(--ivory);padding:.6rem 1.4rem;border-radius:2px;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:500;z-index:999;pointer-events:none;opacity:0;transition:opacity .3s;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+#toast.show{opacity:1;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:1.5rem 2rem;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-muted);border-top:1px solid var(--border);letter-spacing:.08em;display:flex;align-items:center;justify-content:center;gap:1rem;}
+.footer img{height:22px;opacity:.35;}
+
+/* ══════════════ PRINT STYLES ══════════════ */
+@media print{
+  @page{size:A4 landscape;margin:10mm 9mm;}
+  body{background:#fff!important;color:#1E1E1E!important;font-size:8pt;}
+  .header{position:relative!important;background:#2C2C2C!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:6mm 9mm;}
+  .header-logo img{filter:brightness(0) invert(1)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .header-title{color:#fff!important;}.header-title span{color:rgba(255,255,255,.5)!important;}
+  .header-strip{background:rgba(184,151,58,.08)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .header-strip,.strip-item{color:rgba(255,255,255,.5)!important;}
+  .header-actions,.edit-banner,.edit-panel,.pdf-overlay,#toast,.pw-overlay,.btn-comment-del,#fb-loading,#fb-status,#saveIndicator,.add-comment-form,.btn-add-alert,.btn-gold{display:none!important;}
+  .main{padding:3mm 5mm;max-width:100%;}
+  .stat-cell{background:#fafafa!important;border:1px solid #ddd!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .card,.table-wrap,.comment-card{background:#fff!important;border-color:#ddd!important;box-shadow:none!important;}
+  .card-header,.card-footer{background:#fafafa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cards-grid{grid-template-columns:repeat(2,1fr)!important;}
+  .prog-track,.mini-track{background:#eee!important;border-color:#ddd!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .fill-done,.mf-done{background:var(--green)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .fill-prog,.mf-prog{background:var(--gold)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .fill-late,.mf-late{background:var(--red)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .tag,.card-badge,.comment-priority{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .gantt-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .subtask-row,.main-task-header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .subtasks{display:block!important;}
+  .task-toggle{display:none!important;}
+}
+@media(max-width:768px){
+  .header-top{padding:1rem 1.2rem;}.main{padding:1.2rem;}
+  .cards-grid{grid-template-columns:1fr;}
+  .edit-panel{width:100%;}
+  .form-grid,.form-grid-3{grid-template-columns:1fr;}
+  .modal-row{grid-template-columns:1fr;}
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- FIREBASE LOADING -->
+<div id="fb-loading">
+  <img src="https://wp.theroyalportfolio.com/app/uploads/2022/09/TRP-Website-Logo_1.png" alt="The Royal Portfolio" onerror="this.style.display='none'">
+  <div class="fb-spinner"></div>
+  <p>Loading programme data&hellip;</p>
+</div>
+<div id="fb-status"></div>
+
+
+<!-- PASSWORD MODAL -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="pw-logo"><img src="https://wp.theroyalportfolio.com/app/uploads/2022/09/TRP-Website-Logo_2-e1662494460482.png" alt="TRP" onerror="this.style.display='none'" style="height:36px;"></div>
+    <div class="pw-divider"></div>
+    <div class="pw-title">Editor Access</div>
+    <div class="pw-sub">Royal Malewane Construction Programme</div>
+    <label class="pw-label" for="pwInput">Password</label>
+    <div class="pw-input-wrap">
+      <input class="pw-input" type="password" id="pwInput" placeholder="Enter editor password" autocomplete="off" maxlength="64">
+      <button class="pw-toggle" id="pwToggle" tabindex="-1">&#x1F441;</button>
+    </div>
+    <div class="pw-error" id="pwError"></div>
+    <button class="pw-btn" id="pwSubmit">Unlock Editor</button>
+    <div class="pw-hint">Dashboard is view-only without editor access.</div>
+    <div class="pw-session" id="pwSession">&#x2713; Session active</div>
+  </div>
+</div>
+
+<!-- ADD AREA MODAL -->
+<div class="modal-overlay" id="addAreaModal">
+  <div class="modal">
+    <h3>Add New Area</h3>
+    <div class="modal-sub">Create a new suite or facility with its tasks</div>
+    <div class="modal-row">
+      <div class="modal-field"><label>Area Name</label><input type="text" id="newAreaName" placeholder="e.g. Pool House"></div>
+      <div class="modal-field"><label>Type</label><select id="newAreaType"><option value="Suite">Suite</option><option value="Facility">Facility</option></select></div>
+    </div>
+    <div class="modal-field"><label>Completion Date</label><input type="date" id="newAreaAdj"></div>
+    <div class="modal-section-title">Tasks (main tasks &amp; subtasks)</div>
+    <div class="modal-phases-list" id="newAreaPhases"></div>
+    <button class="modal-add-task-btn" id="btnAddModalTask">+ Add Task</button>
+    <div class="modal-btn-row">
+      <button class="btn btn-save" id="btnConfirmAddArea">+ Add Area</button>
+      <button class="btn btn-danger" id="btnCancelAddArea">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="addTaskModal">
+  <div class="modal" style="width:420px;">
+    <h3>Add Task</h3>
+    <div class="modal-sub" id="addTaskSubtitle"></div>
+    <div class="modal-field"><label>Task Name</label><input type="text" id="newTaskName" placeholder="e.g. Install Flooring"></div>
+    <div class="modal-field"><label>Task Type</label>
+      <select id="newTaskType">
+        <option value="main">Main Task</option>
+        <option value="sub">Subtask (under previous main task)</option>
+      </select>
+    </div>
+    <div class="modal-field" id="newTaskDateField"><label>Completion Date</label><input type="date" id="newTaskDate"></div>
+    <div class="modal-field"><label>Status</label>
+      <select id="newTaskStatus"><option value="In Process">In Process</option><option value="Completed">Completed</option></select>
+    </div>
+    <div class="modal-btn-row">
+      <button class="btn btn-save" id="btnConfirmAddTask">+ Add Task</button>
+      <button class="btn btn-danger" id="btnCancelAddTask">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-modal" style="width:340px;">
+    <h3 id="confirmTitle">Confirm</h3>
+    <p id="confirmMsg"></p>
+    <div class="modal-btn-row">
+      <button class="btn btn-danger" id="btnConfirmYes">Confirm</button>
+      <button class="btn btn-outline" id="btnConfirmNo">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF OVERLAY -->
+<div class="pdf-overlay" id="pdfOverlay">
+  <div class="pdf-modal">
+    <h3>Export Report</h3>
+    <p>Select which sections to include. Current data and edits will be reflected.</p>
+    <label class="pdf-option"><input type="radio" name="pdf-scope" value="all" checked><div><div class="pdf-option-label">Full Dashboard</div><div class="pdf-option-sub">All sections</div></div></label>
+    <label class="pdf-option"><input type="radio" name="pdf-scope" value="summary"><div><div class="pdf-option-label">Summary &amp; Milestones</div><div class="pdf-option-sub">Stats + milestone table only</div></div></label>
+    <label class="pdf-option"><input type="radio" name="pdf-scope" value="cards"><div><div class="pdf-option-label">Area Detail Cards</div><div class="pdf-option-sub">Individual area progress cards</div></div></label>
+    <label class="pdf-option"><input type="radio" name="pdf-scope" value="gantt"><div><div class="pdf-option-label">Programme Timeline</div><div class="pdf-option-sub">Gantt chart only</div></div></label>
+    <label class="pdf-option"><input type="radio" name="pdf-scope" value="comments"><div><div class="pdf-option-label">Open Items &amp; Comments</div><div class="pdf-option-sub">Action items and comments only</div></div></label>
+    <div class="pdf-btn-row">
+      <button class="btn btn-gold" id="doPrint">&#x2B07; Print / Save PDF</button>
+      <button class="btn btn-outline" id="cancelPdf">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PANEL -->
+<div class="edit-panel" id="editPanel">
+  <div class="ep-header">
+    <div class="ep-title">Manage Areas &amp; Tasks</div>
+    <button class="ep-close" id="closePanel">&#x2715;</button>
+  </div>
+  <div class="ep-body">
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+      <select class="ep-area-sel" id="areaSelect" style="flex:1;margin-bottom:0;"></select>
+      <button class="btn btn-save" id="btnOpenAddArea" style="flex-shrink:0;white-space:nowrap;">+ Area</button>
+    </div>
+    <div id="epFields"></div>
+  </div>
+  <div class="ep-actions">
+    <div class="ep-actions-row">
+      <button class="btn btn-save" id="btnApply">&#x2713; Apply &amp; Sync</button>
+      <button class="btn btn-danger" id="btnReset">&#x21BA; Reset Area</button>
+    </div>
+    <button class="btn btn-danger" id="btnResetAll" style="width:100%;justify-content:center;margin-top:.3rem;font-size:.7rem;">&#x26A0; Reset ALL Data to Original</button>
+    <div class="ep-note">All changes save automatically to Firebase</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-top">
+    <div class="header-logo">
+      <img src="https://wp.theroyalportfolio.com/app/uploads/2022/09/TRP-Website-Logo_1.png" alt="The Royal Portfolio" onerror="this.style.display='none'">
+      <div class="header-logo-divider"></div>
+      <div class="header-title">
+        Royal Malewane
+        <span>Construction Programme — 2026 Revamp</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div id="saveIndicator">&#x2713; Saved</div>
+      <button class="btn btn-ghost" id="toggleEdit">&#x1F512; Edit / Manage</button>
+      <button class="btn btn-ghost" id="openPdf">&#x2B07; Export</button>
+      <div class="header-meta">
+        <span class="pc-date" id="hdrPcDate">PC: 30 May 2026</span>
+        <span id="hdrDaysLeft"></span>
+      </div>
+    </div>
+  </div>
+  <div class="header-strip">
+    <div class="header-strip-left">
+      <span class="strip-item">Areas: <strong id="stripAreas">—</strong></span>
+      <span class="strip-item">Complete: <strong id="stripDone">—</strong></span>
+      <span class="strip-item">In Progress: <strong id="stripIp">—</strong></span>
+      <span class="strip-item">Overdue: <strong id="stripLate">—</strong></span>
+      <span class="strip-item">Overall: <strong id="stripPct">—</strong></span>
+    </div>
+    <span class="strip-item" style="color:rgba(255,255,255,.35);font-size:.58rem;">Print Date: 25 Mar 2026</span>
+  </div>
+</header>
+
+<div class="edit-banner" id="editBanner">
+  &#x1F513; EDITOR UNLOCKED — Edit dates and tasks using the panel on the right. Click any completion date to edit inline.
+</div>
+
+<main class="main">
+
+  <!-- MILESTONES TABLE -->
+  <div class="milestones-section">
+    <h2 class="section-title">Area Milestones</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Area</th><th>Type</th>
+          <th>Completion Date <span style="color:var(--gold);font-size:.55rem;font-weight:700;margin-left:.3rem;">▲ SORTED</span></th>
+          <th>Progress</th><th>Status</th>
+        </tr></thead>
+        <tbody id="milTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AREA CARDS -->
+  <div class="cards-section">
+    <h2 class="section-title">Suite &amp; Area Detail</h2>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#9B9B9B"></span>Not Started</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span>In Progress</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Overdue</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#8B6FBE"></span>On Hold</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#1A7AB8"></span>Snagged</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Completed</span>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+
+  <!-- OPEN ITEMS & COMMENTS -->
+  <div class="comments-section">
+    <div class="section-header">
+      <h2 class="section-title" style="margin-bottom:0;padding-bottom:0;border-bottom:none;">Open Items &amp; Comments</h2>
+    </div>
+
+    <!-- Add Comment Form — visible to everyone -->
+    <div class="add-comment-form" id="addCommentForm">
+      <h4>Add a Comment or Action Item</h4>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Your Name</label>
+          <input type="text" id="cmtAuthor" placeholder="Your full name">
+        </div>
+        <div class="form-field">
+          <label>Area / Reference</label>
+          <input type="text" id="cmtArea" placeholder="e.g. RS1, Kitchen, All Suites">
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Comment / Item</label>
+        <textarea id="cmtText" rows="3" placeholder="Describe the issue, action needed, or comment…"></textarea>
+      </div>
+      <div class="form-grid-3">
+        <div class="form-field">
+          <label>Priority</label>
+          <select id="cmtPriority">
+            <option value="high">🔴 High — Urgent action</option>
+            <option value="medium" selected>🟡 Medium — Action needed</option>
+            <option value="low">🟢 Low — For info</option>
+            <option value="info">🔵 Info — No action</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Action Required By</label>
+          <input type="text" id="cmtActionBy" placeholder="Name or role">
+        </div>
+        <div class="form-field">
+          <label>Target Date</label>
+          <input type="date" id="cmtTargetDate">
+        </div>
+      </div>
+      <button class="btn btn-gold" id="btnSubmitComment" style="margin-top:.3rem;">Submit Comment</button>
+    </div>
+
+    <div id="commentsGrid"></div>
+  </div>
+
+  <!-- GANTT -->
+  <div class="timeline-section">
+    <h2 class="section-title">Programme Timeline (Feb – Jun 2026)</h2>
+    <div class="table-wrap"><div id="ganttWrap"></div></div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <img src="https://wp.theroyalportfolio.com/app/uploads/2022/09/TRP-Website-Logo_1.png" alt="" onerror="this.style.display='none'">
+  <span>ROYAL MALEWANE &nbsp;·&nbsp; CONSTRUCTION PROGRAMME &nbsp;·&nbsp; 2026</span>
+</footer>
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   FIREBASE
+═══════════════════════════════════════════ */
+const firebaseConfig={
+  apiKey:"AIzaSyA6PrNQXcdHp_4gKd6EyxEDt19W4Ilim0M",
+  authDomain:"rmlrevamp2026.firebaseapp.com",
+  databaseURL:"https://rmlrevamp2026-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"rmlrevamp2026",
+  storageBucket:"rmlrevamp2026.firebasestorage.app",
+  messagingSenderId:"221500385252",
+  appId:"1:221500385252:web:c57b158fcfd041cb4bc9f1",
+  measurementId:"G-FBFBVDQ5NN"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const dbRef=db.ref('programme_v2');
+
+function fbArr(val){
+  if(!val)return[];
+  if(Array.isArray(val))return val;
+  return Object.keys(val).sort((a,b)=>Number(a)-Number(b)).map(k=>val[k]).filter(Boolean);
+}
+
+/* ═══════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════ */
+const TODAY=new Date('2026-03-25');
+const d=s=>new Date(s);
+const daysBetween=(a,b)=>Math.round((b-a)/86400000);
+const fmt=s=>{if(!s)return'—';const dt=new Date(s);return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});};
+const toISO=dt=>dt instanceof Date?dt.toISOString().slice(0,10):dt;
+const esc=s=>s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';
+
+/* ═══════════════════════════════════════════
+   ORIGINAL DATA — tasks now support main/sub structure
+   Each task: {id, n (name), type:'main'|'sub', s:'Completed'|'In Process', ad:date}
+   Main task date = max of subtasks if it has subs, else manual date
+═══════════════════════════════════════════ */
+const ORIG=[
+  {id:'LS6',name:'Luxury Suite 6',type:'Suite',adjEnd:'2026-04-28',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-04-15'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-04-01'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-04-20'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-10'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-05'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t9',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t10',n:'DHW',type:'sub',s:'In Process',ad:'2026-04-10'},
+    {id:'t11',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-04-28'},
+    {id:'t12',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t13',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-04-13'},
+    {id:'t14',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-02'},
+    {id:'t15',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-04-17'},
+    {id:'t16',n:'Sanware',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t17',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-04-18'},
+    {id:'t18',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t19',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t20',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t21',n:'Pools & External',type:'main',s:'In Process',ad:'2026-04-15'},
+    {id:'t22',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t23',n:'FOH Appliances',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t24',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t25',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-15'},
+  ],comments:[]},
+  {id:'LS5',name:'Luxury Suite 5',type:'Suite',adjEnd:'2026-05-02',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-04-20'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-04-02'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-04-23'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-10'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-04-23'},
+    {id:'t9',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t10',n:'DHW',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t11',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-02'},
+    {id:'t12',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-04'},
+    {id:'t13',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-04-13'},
+    {id:'t14',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-08'},
+    {id:'t15',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-04-22'},
+    {id:'t16',n:'Sanware',type:'sub',s:'In Process',ad:'2026-04-01'},
+    {id:'t17',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-04-23'},
+    {id:'t18',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t19',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t20',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t21',n:'Pools & External',type:'main',s:'In Process',ad:'2026-04-20'},
+    {id:'t22',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t23',n:'FOH Appliances',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t24',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t25',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-15'},
+  ],comments:[]},
+  {id:'LS4',name:'Luxury Suite 4',type:'Suite',adjEnd:'2026-05-07',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-04-24'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-24'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-04-07'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-04-28'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t9',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-05-30'},
+    {id:'t10',n:'DHW',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t11',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-07'},
+    {id:'t12',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-17'},
+    {id:'t13',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t14',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-13'},
+    {id:'t15',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-04-27'},
+    {id:'t16',n:'Vintage Doors',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t17',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t18',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-07'},
+    {id:'t19',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-04-01'},
+    {id:'t20',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-04-24'},
+    {id:'t21',n:'Pools & External',type:'main',s:'In Process',ad:'2026-05-30'},
+    {id:'t22',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-05-30'},
+    {id:'t24',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t25',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-07'},
+  ],comments:[]},
+  {id:'LS3',name:'Luxury Suite 3',type:'Suite',adjEnd:'2026-05-12',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-04-29'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-04-01'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-29'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-04-18'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-02'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t9',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t10',n:'DHW',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t11',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-12'},
+    {id:'t12',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-17'},
+    {id:'t13',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-04-24'},
+    {id:'t14',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-17'},
+    {id:'t15',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-01'},
+    {id:'t16',n:'Vintage Doors',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t17',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t18',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t19',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-04-07'},
+    {id:'t20',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-04-29'},
+    {id:'t21',n:'Pools & External',type:'main',s:'In Process',ad:'2026-05-30'},
+    {id:'t22',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-05-30'},
+    {id:'t24',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t25',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-12'},
+  ],comments:[]},
+  {id:'LS2',name:'Luxury Suite 2',type:'Suite',adjEnd:'2026-05-15',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-05-02'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-04-06'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-06'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-06'},
+    {id:'t9',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t10',n:'DHW',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t11',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-15'},
+    {id:'t12',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t13',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t14',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-21'},
+    {id:'t15',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t16',n:'Vintage Doors',type:'sub',s:'In Process',ad:'2026-04-23'},
+    {id:'t17',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-06'},
+    {id:'t18',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-15'},
+    {id:'t19',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-04-10'},
+    {id:'t20',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t21',n:'Pools & External',type:'main',s:'In Process',ad:'2026-06-12'},
+    {id:'t22',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-06-12'},
+    {id:'t24',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t25',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-15'},
+  ],comments:[]},
+  {id:'RS1',name:'Royal Suite 1',type:'Suite',adjEnd:'2026-05-20',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-05-07'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-04-10'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-05-07'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t5',n:'Sky Light Windows',type:'sub',s:'In Process',ad:'2026-04-21'},
+    {id:'t6',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-11'},
+    {id:'t7',n:'HVAC',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t8',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t9',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-11'},
+    {id:'t10',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t11',n:'DHW',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t12',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-20'},
+    {id:'t13',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-21'},
+    {id:'t14',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t15',n:'BOH Kitchen Equipment Suites',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t16',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t17',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-09'},
+    {id:'t18',n:'Vintage Doors',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t19',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-11'},
+    {id:'t20',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-20'},
+    {id:'t21',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-04-18'},
+    {id:'t22',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-05-07'},
+    {id:'t23',n:'FOH Appliances',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t24',n:'Pools & External',type:'main',s:'In Process',ad:'2026-06-12'},
+    {id:'t25',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-06-12'},
+    {id:'t26',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t27',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-20'},
+  ],comments:[]},
+  {id:'LS7',name:'Luxury Suite 7',type:'Suite',adjEnd:'2026-05-25',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-05-12'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-04-16'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-15'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-05-10'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-15'},
+    {id:'t9',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t10',n:'DHW',type:'sub',s:'In Process',ad:'2026-05-10'},
+    {id:'t11',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-25'},
+    {id:'t12',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t13',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-05-07'},
+    {id:'t14',n:'Flooring',type:'sub',s:'In Process',ad:'2026-05-03'},
+    {id:'t15',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-14'},
+    {id:'t16',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-15'},
+    {id:'t17',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-25'},
+    {id:'t18',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t19',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t20',n:'Pools & External',type:'main',s:'In Process',ad:'2026-05-12'},
+    {id:'t21',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t22',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t23',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-25'},
+  ],comments:[]},
+  {id:'RS8',name:'Royal Suite 8',type:'Suite',adjEnd:'2026-05-29',tasks:[
+    {id:'t1',n:'Construction & Civil Works',type:'main',s:'In Process',ad:'2026-05-16'},
+    {id:'t2',n:'Roof Suites',type:'sub',s:'In Process',ad:'2026-04-22'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-05-08'},
+    {id:'t5',n:'Sky Light Windows',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t6',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-20'},
+    {id:'t7',n:'HVAC',type:'sub',s:'In Process',ad:'2026-05-15'},
+    {id:'t8',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-05-10'},
+    {id:'t9',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-20'},
+    {id:'t10',n:'Water Reticulation',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t11',n:'DHW',type:'sub',s:'In Process',ad:'2026-05-15'},
+    {id:'t12',n:'Finishes & Fit-out',type:'main',s:'In Process',ad:'2026-05-29'},
+    {id:'t13',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t14',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t15',n:'BOH Kitchen Equipment Suites',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t16',n:'Window / Door Refurb',type:'sub',s:'In Process',ad:'2026-04-27'},
+    {id:'t17',n:'Flooring',type:'sub',s:'In Process',ad:'2026-05-09'},
+    {id:'t18',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-19'},
+    {id:'t19',n:'Vintage Doors',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t20',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-20'},
+    {id:'t21',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-29'},
+    {id:'t22',n:'Underfloor Heating',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t23',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t24',n:'FOH Appliances',type:'sub',s:'In Process',ad:'2026-05-10'},
+    {id:'t25',n:'Pools & External',type:'main',s:'In Process',ad:'2026-05-16'},
+    {id:'t26',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t27',n:'MEP Commissioning',type:'main',s:'In Process',ad:'2026-06-15'},
+    {id:'t28',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-29'},
+  ],comments:[]},
+  {id:'KITCHEN',name:'BOH Kitchen',type:'Facility',adjEnd:'2026-05-18',tasks:[
+    {id:'t1',n:'Structure & Roof',type:'main',s:'In Process',ad:'2026-03-30'},
+    {id:'t2',n:'Roof BOH (Kitchen Roof)',type:'sub',s:'Completed',ad:'2026-03-20'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t4',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-04-28'},
+    {id:'t5',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-18'},
+    {id:'t6',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-14'},
+    {id:'t7',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t8',n:'Fire Mainlines + Detection',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t9',n:'Finishes',type:'main',s:'In Process',ad:'2026-05-18'},
+    {id:'t10',n:'BOH Kitchen Equipment Main',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t11',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t12',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-04-25'},
+    {id:'t13',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-18'},
+  ],comments:[]},
+  {id:'SPA',name:'Spa & Gym',type:'Facility',adjEnd:'2026-05-25',tasks:[
+    {id:'t1',n:'Structure & Civil',type:'main',s:'In Process',ad:'2026-04-13'},
+    {id:'t2',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-13'},
+    {id:'t3',n:'Sauna',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t4',n:'Cold Plunge',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-12'},
+    {id:'t6',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t7',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t8',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t9',n:'DHW',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t10',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-27'},
+    {id:'t11',n:'Pool & Finishes',type:'main',s:'In Process',ad:'2026-05-24'},
+    {id:'t12',n:'Pools (Heatpump + Filter + Pump)',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t13',n:'Flooring',type:'sub',s:'In Process',ad:'2026-05-01'},
+    {id:'t14',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-24'},
+    {id:'t15',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-12'},
+    {id:'t16',n:'Gym Equipment',type:'sub',s:'In Process',ad:'2026-04-13'},
+    {id:'t17',n:'Fire Mainlines + Detection',type:'sub',s:'In Process',ad:'2026-05-02'},
+    {id:'t18',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-25'},
+  ],comments:[]},
+  {id:'DINING',name:'Main Dining Area',type:'Facility',adjEnd:'2026-05-07',tasks:[
+    {id:'t1',n:'Structure & Roof',type:'main',s:'In Process',ad:'2026-04-15'},
+    {id:'t2',n:'Roof FOH (Main Area, Dining, Library)',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-08'},
+    {id:'t4',n:'Decks',type:'sub',s:'In Process',ad:'2026-03-30'},
+    {id:'t5',n:'Sky Light Windows',type:'sub',s:'Completed',ad:'2026-03-10'},
+    {id:'t6',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-04-21'},
+    {id:'t7',n:'HVAC',type:'sub',s:'In Process',ad:'2026-04-15'},
+    {id:'t8',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-04-10'},
+    {id:'t9',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-04-21'},
+    {id:'t10',n:'Fire Mainlines + Detection',type:'sub',s:'In Process',ad:'2026-04-21'},
+    {id:'t11',n:'Finishes',type:'main',s:'In Process',ad:'2026-05-07'},
+    {id:'t12',n:'Flooring',type:'sub',s:'In Process',ad:'2026-04-14'},
+    {id:'t13',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-04-08'},
+    {id:'t14',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-04-21'},
+    {id:'t15',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-07'},
+    {id:'t16',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-04-17'},
+    {id:'t17',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-07'},
+  ],comments:[]},
+  {id:'SHOP',name:'New Shop',type:'Facility',adjEnd:'2026-05-29',tasks:[
+    {id:'t1',n:'Structure & Roof',type:'main',s:'In Process',ad:'2026-04-25'},
+    {id:'t2',n:'Roof FOH (New Shop)',type:'sub',s:'In Process',ad:'2026-04-18'},
+    {id:'t3',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-24'},
+    {id:'t4',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-25'},
+    {id:'t5',n:'HVAC',type:'sub',s:'In Process',ad:'2026-05-20'},
+    {id:'t6',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-05-15'},
+    {id:'t7',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-25'},
+    {id:'t8',n:'Finishes',type:'main',s:'In Process',ad:'2026-05-29'},
+    {id:'t9',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-05-01'},
+    {id:'t10',n:'Joinery / Tops',type:'sub',s:'In Process',ad:'2026-05-18'},
+    {id:'t11',n:'Flooring',type:'sub',s:'In Process',ad:'2026-05-20'},
+    {id:'t12',n:'Sanware',type:'sub',s:'In Process',ad:'2026-04-28'},
+    {id:'t13',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-20'},
+    {id:'t14',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-29'},
+  ],comments:[]},
+  {id:'BOMA',name:'Obs. Lounge / Boma',type:'Facility',adjEnd:'2026-05-29',tasks:[
+    {id:'t1',n:'Structure & Civil',type:'main',s:'In Process',ad:'2026-04-27'},
+    {id:'t2',n:'Construction',type:'sub',s:'In Process',ad:'2026-04-27'},
+    {id:'t3',n:'Decking (Walkway link)',type:'sub',s:'In Process',ad:'2026-04-20'},
+    {id:'t4',n:'Decking (Observation lounge roof)',type:'sub',s:'In Process',ad:'2026-04-30'},
+    {id:'t5',n:'Mechanical & Electrical',type:'main',s:'In Process',ad:'2026-05-16'},
+    {id:'t6',n:'Plumbing Work',type:'sub',s:'In Process',ad:'2026-05-05'},
+    {id:'t7',n:'Electrical Work',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t8',n:'Fire Mainlines + Detection',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t9',n:'Finishes',type:'main',s:'In Process',ad:'2026-05-29'},
+    {id:'t10',n:'New Aluminium Doors / Windows',type:'sub',s:'In Process',ad:'2026-04-27'},
+    {id:'t11',n:'Flooring',type:'sub',s:'In Process',ad:'2026-05-11'},
+    {id:'t12',n:'Tiles, wallpaper, paint',type:'sub',s:'In Process',ad:'2026-05-04'},
+    {id:'t13',n:'Light Fixtures / switchgear / fans',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t14',n:'Blinds / Curtains',type:'sub',s:'In Process',ad:'2026-05-29'},
+    {id:'t15',n:'Ballustrades',type:'sub',s:'In Process',ad:'2026-05-16'},
+    {id:'t16',n:"Builder's Clean & Snag",type:'main',s:'In Process',ad:'2026-05-29'},
+  ],comments:[]},
+];
+
+/* ═══════════════════════════════════════════
+   ORIGINAL COMMENTS DATA
+═══════════════════════════════════════════ */
+const ORIG_COMMENTS=[
+  {id:'c1',author:'Programme Manager',area:'BOH Kitchen',text:'DRAWINGS NEEDED URGENTLY — services to ceiling void must be resolved before ceiling installation proceeds.',priority:'high',actionBy:'Architect',targetDate:'2026-03-30',ts:'2026-03-25T08:00:00'},
+  {id:'c2',author:'Site Manager',area:'RS8 & LS7',text:'Furniture move-in targeted for 1 April 2026. Confirm snag status of both suites before scheduling.',priority:'medium',actionBy:'Site Manager',targetDate:'2026-03-28',ts:'2026-03-25T08:05:00'},
+  {id:'c3',author:'Programme Manager',area:'New Shop',text:'Construction drawings not yet issued. Schedule sent to Aluview for aluminium window pricing — awaiting response.',priority:'high',actionBy:'Architect',targetDate:'2026-03-27',ts:'2026-03-25T08:10:00'},
+  {id:'c4',author:'Site Manager',area:'Obs. Lounge / Boma',text:'No delivery date confirmed yet for aluminium windows. On the critical path.',priority:'high',actionBy:'Procurement',targetDate:'2026-03-27',ts:'2026-03-25T08:15:00'},
+  {id:'c5',author:'Programme Manager',area:'All Suites',text:'Floor screed quotes sent for approval — confirm sign-off to avoid delay to internal finishes.',priority:'medium',actionBy:'Project Owner',targetDate:'2026-03-28',ts:'2026-03-25T08:20:00'},
+  {id:'c6',author:'Site Manager',area:'Multiple Suites',text:'Deck repairs — Dirkie to provide updated commentary and schedule for all outstanding deck works.',priority:'medium',actionBy:'Dirkie',targetDate:'2026-03-30',ts:'2026-03-25T08:25:00'},
+  {id:'c7',author:'Programme Manager',area:'All Suites — Services',text:'MEP/Services adjusted finish pushed to June 2026 across all suites due to main plant installation delays.',priority:'info',actionBy:'MEP Contractor',targetDate:'2026-04-15',ts:'2026-03-25T08:30:00'},
+];
+
+/* ═══════════════════════════════════════════
+   WORKING STATE
+═══════════════════════════════════════════ */
+let areas=JSON.parse(JSON.stringify(ORIG));
+let comments=JSON.parse(JSON.stringify(ORIG_COMMENTS));
+let _cmtIdCounter=8;
+
+/* ═══════════════════════════════════════════
+   FIREBASE PERSISTENCE
+═══════════════════════════════════════════ */
+function setStatus(state,msg){
+  const el=document.getElementById('fb-status');
+  if(!el)return;
+  el.className='fb-status '+state;
+  el.textContent=msg;
+  if(state==='online') setTimeout(()=>{el.className='fb-status';},3500);
+}
+let _saveIndTimer;
+function flashSaved(){
+  const ind=document.getElementById('saveIndicator');
+  if(!ind)return;
+  ind.style.display='block';
+  clearTimeout(_saveIndTimer);
+  _saveIndTimer=setTimeout(()=>{ind.style.display='none';},2500);
+}
+function saveState(){
+  setStatus('saving','↑ Saving…');
+  dbRef.set({areas,comments,cmtCounter:_cmtIdCounter})
+    .then(()=>{setStatus('online','✓ Saved');flashSaved();})
+    .catch(err=>{setStatus('offline','✗ Save failed');console.error(err);});
+}
+function loadState(){
+  return new Promise(resolve=>{
+    // Safety timeout — always dismiss loading screen after 8s even if Firebase hangs
+    const timeout = setTimeout(()=>{
+      setStatus('offline','○ Offline — using local data');
+      resolve(false);
+    }, 8000);
+
+    dbRef.once('value').then(snap=>{
+      clearTimeout(timeout);
+      const data=snap.val();
+      if(data&&(data.areas||data.comments)){
+        const a=fbArr(data.areas);
+        const c=fbArr(data.comments);
+        if(a.length>0) areas=a;
+        if(c.length>0) comments=c;
+        if(data.cmtCounter) _cmtIdCounter=parseInt(data.cmtCounter,10)||8;
+        resolve(true);
+      } else {
+        dbRef.set({areas,comments,cmtCounter:_cmtIdCounter})
+          .then(()=>resolve(false)).catch(()=>resolve(false));
+      }
+    }).catch(err=>{
+      clearTimeout(timeout);
+      setStatus('offline','✗ Could not connect');
+      console.error(err);
+      resolve(false);
+    });
+  });
+}
+function startRealtimeSync(){
+  dbRef.on('value',snap=>{
+    const data=snap.val();
+    if(!data)return;
+    if(!editMode){
+      const a=fbArr(data.areas);
+      const c=fbArr(data.comments);
+      if(a.length>0) areas=a;
+      if(c.length>0) comments=c;
+      if(data.cmtCounter) _cmtIdCounter=parseInt(data.cmtCounter,10)||8;
+      renderAll();
+    }
+  },err=>console.warn(err));
+  db.ref('.info/connected').on('value',snap=>{
+    if(snap.val()===true) setStatus('online','● Connected');
+    else setStatus('offline','○ Offline');
+  });
+}
+
+/* ═══════════════════════════════════════════
+   HELPERS & CALCULATIONS
+═══════════════════════════════════════════ */
+function getMainTasks(area){return area.tasks.filter(t=>t.type==='main');}
+function getSubTasks(area,mainIdx){
+  // subtasks immediately follow the main task up to next main
+  const tasks=area.tasks;
+  const subs=[];
+  for(let i=mainIdx+1;i<tasks.length;i++){
+    if(tasks[i].type==='main') break;
+    subs.push({task:tasks[i],idx:i});
+  }
+  return subs;
+}
+function syncMainTaskDate(area,mainIdx){
+  // Main task date = max of its subtask dates (if it has subs)
+  const subs=getSubTasks(area,mainIdx);
+  if(subs.length===0)return; // manual date, no sync
+  const maxDate=subs.reduce((m,s)=>new Date(s.task.ad)>new Date(m)?s.task.ad:m,'2020-01-01');
+  area.tasks[mainIdx].ad=maxDate;
+}
+function syncAllMainDates(area){
+  area.tasks.forEach((t,i)=>{if(t.type==='main') syncMainTaskDate(area,i);});
+}
+function syncAreaEnd(area){
+  const mainTasks=area.tasks.filter(t=>t.type==='main');
+  if(mainTasks.length===0)return;
+  area.adjEnd=mainTasks.reduce((m,t)=>new Date(t.ad)>new Date(m)?t.ad:m,'2020-01-01');
+}
+function calcPct(area){
+  const active=area.tasks.filter(t=>t.s!=='Cancelled').length;
+  const done=area.tasks.filter(t=>t.s==='Completed'||t.s==='Snagged').length;
+  return active>0?Math.min(100,Math.round(done/active*100)):0;
+}
+function isDelayed(area){return area.tasks.some(t=>(t.s==='In Process'||t.s==='In Progress'||t.s==='Not Started'||t.s==='On Hold')&&new Date(t.ad)<TODAY);}
+function dotClass(task){
+  if(task.s==='Completed')   return 'dot-done';
+  if(task.s==='On Hold')     return 'dot-hold';
+  if(task.s==='Snagged')     return 'dot-snagged';
+  if(task.s==='Cancelled')   return 'dot-cancelled';
+  if(task.s==='Not Started') return 'dot-pending';
+  if(new Date(task.ad)<TODAY) return 'dot-late';
+  return 'dot-active';
+}
+
+/* Sort areas & tasks */
+function sortAreas(){areas.sort((a,b)=>new Date(a.adjEnd)-new Date(b.adjEnd));}
+function sortAllMainDates(){areas.forEach(a=>syncAllMainDates(a));}
+
+/* ═══════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════ */
+const _PW_HASH='-wcew0f';
+function _hashPw(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return h.toString(36);}
+let editMode=false;
+let _authenticated=false;
+(()=>{try{if(sessionStorage.getItem('rm_auth')===_PW_HASH)_authenticated=true;}catch(e){}})();
+
+function lockEditor(){
+  editMode=false;
+  document.body.classList.remove('edit-mode');
+  document.getElementById('editBanner').classList.remove('show');
+  document.getElementById('toggleEdit').classList.remove('active');
+  document.getElementById('toggleEdit').innerHTML='&#x1F512; Edit / Manage';
+  document.getElementById('editPanel').classList.remove('open');
+}
+function unlockEditor(){
+  _authenticated=true;
+  try{sessionStorage.setItem('rm_auth',_PW_HASH);}catch(e){}
+  document.getElementById('pwOverlay').classList.remove('show');
+  document.getElementById('pwError').textContent='';
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwSession').classList.add('show');
+  activateEditMode();
+  toast('🔓 Editor unlocked');
+}
+function activateEditMode(){
+  editMode=true;
+  document.body.classList.add('edit-mode');
+  document.getElementById('editBanner').classList.add('show');
+  document.getElementById('toggleEdit').classList.add('active');
+  document.getElementById('toggleEdit').innerHTML='&#x1F513; Edit / Manage';
+  document.getElementById('editPanel').classList.add('open');
+  rebuildPanelSelect('');
+  if(areas.length>0) populatePanel(areas[0].id);
+}
+document.getElementById('toggleEdit').addEventListener('click',()=>{
+  if(editMode){lockEditor();return;}
+  if(_authenticated){activateEditMode();}
+  else{
+    document.getElementById('pwOverlay').classList.add('show');
+    document.getElementById('pwError').textContent='';
+    document.getElementById('pwInput').value='';
+    setTimeout(()=>document.getElementById('pwInput').focus(),80);
+  }
+});
+document.getElementById('pwSubmit').addEventListener('click',()=>attemptUnlock());
+document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptUnlock();});
+let _attempts=0;
+function attemptUnlock(){
+  const val=document.getElementById('pwInput').value;
+  if(!val){document.getElementById('pwError').textContent='Please enter the password.';return;}
+  if(_hashPw(val)===_PW_HASH){_attempts=0;unlockEditor();}
+  else{
+    _attempts++;
+    document.getElementById('pwError').textContent=_attempts>=3?'Incorrect. Contact the project manager.':'Incorrect password. Try again.';
+    const inp=document.getElementById('pwInput');
+    inp.classList.add('shake');
+    inp.value='';
+    setTimeout(()=>inp.classList.remove('shake'),400);
+    inp.focus();
+  }
+}
+document.getElementById('pwToggle').addEventListener('click',()=>{
+  const inp=document.getElementById('pwInput');
+  const h=inp.type==='password';
+  inp.type=h?'text':'password';
+  document.getElementById('pwToggle').innerHTML=h?'&#x1F648;':'&#x1F441;';
+  inp.focus();
+});
+document.getElementById('pwOverlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('pwOverlay'))
+    document.getElementById('pwOverlay').classList.remove('show');
+});
+document.getElementById('closePanel').addEventListener('click',()=>lockEditor());
+
+/* ═══════════════════════════════════════════
+   RENDER ALL
+═══════════════════════════════════════════ */
+function renderAll(){
+  sortAllMainDates();
+  areas.forEach(a=>{syncAllMainDates(a);syncAreaEnd(a);});
+  sortAreas();
+  renderHeader();
+  renderMilestones();
+  renderCards();
+  renderComments();
+  renderGantt();
+}
+
+/* ── HEADER STRIP ── */
+function renderHeader(){
+  let done=0,ip=0,late=0,total=0;
+  areas.forEach(a=>a.tasks.forEach(t=>{total++;if(t.s==='Completed')done++;else{ip++;if(new Date(t.ad)<TODAY)late++;}}));
+  const dd=daysBetween(TODAY,new Date('2026-05-30'));
+  document.getElementById('stripAreas').textContent=areas.length;
+  document.getElementById('stripDone').textContent=done;
+  document.getElementById('stripIp').textContent=ip;
+  document.getElementById('stripLate').textContent=late;
+  document.getElementById('stripPct').textContent=(total>0?Math.round(done/total*100):0)+'%';
+  document.getElementById('hdrDaysLeft').textContent=dd+' days left';
+}
+
+/* ── MILESTONES TABLE ── */
+function renderMilestones(){
+  const tb=document.getElementById('milTbody');tb.innerHTML='';
+  areas.forEach(area=>{
+    const p=calcPct(area);
+    const delayed=isDelayed(area);
+    const sCls=p===100?'tag-done':delayed?'tag-late':'tag-active';
+    const sTxt=p===100?'Complete':delayed?'Has Delays':'In Progress';
+    const fCls=p===100?'mf-done':delayed?'mf-late':'mf-prog';
+    const origArea=ORIG.find(o=>o.id===area.id);
+    const changed=origArea&&area.adjEnd!==origArea.adjEnd;
+    tb.innerHTML+=`<tr>
+      <td class="area-name">${esc(area.name)}</td>
+      <td><span class="tag ${area.type==='Suite'?'tag-suite':'tag-fac'}">${area.type}</span></td>
+      <td><div class="date-cell${changed?' changed':''}" data-id="${area.id}">
+        <span class="changed-flag"></span>
+        <span class="date-display" onclick="handleDateClick(this,'${area.id}')">${fmt(area.adjEnd)}</span>
+        <span class="edit-pencil">✎</span>
+        <input type="date" class="date-input" value="${area.adjEnd}" onchange="handleInlineChange(this,'${area.id}')" onblur="hideInlineInput(this)">
+      </div></td>
+      <td><div class="mini-bar"><div class="mini-track"><div class="mini-fill ${fCls}" style="width:${p}%"></div></div><span class="mini-pct">${p}%</span></div></td>
+      <td><span class="tag ${sCls}">${sTxt}</span></td>
+    </tr>`;
+  });
+}
+
+/* ── AREA CARDS with main/sub task tree ── */
+function renderCards(){
+  const grid=document.getElementById('cardsGrid');grid.innerHTML='';
+  areas.forEach(area=>{
+    const p=calcPct(area);
+    const delayed=isDelayed(area);
+    const fCls=p===100?'fill-done':delayed?'fill-late':'fill-prog';
+    const bCls=p===100?'badge-ok':delayed?'badge-late':'badge-ip';
+    const bTxt=p===100?'Complete':delayed?'Has Delays':'In Progress';
+    const done=area.tasks.filter(x=>x.s==='Completed'||x.s==='Snagged').length;
+
+    // Build task tree HTML
+    let treeHTML='<div class="task-tree">';
+    let i=0;
+    while(i<area.tasks.length){
+      const task=area.tasks[i];
+      if(task.type==='main'){
+        const subs=getSubTasks(area,i);
+        const hasSubs=subs.length>0;
+        const mDotCls=dotClass(task);
+        const uid=area.id+'_t'+i;
+        if(hasSubs){
+          let subsHTML='<div class="subtasks" id="subs_'+uid+'">';
+          subs.forEach(({task:st})=>{
+            const sdCls=dotClass(st);
+            subsHTML+=`<div class="subtask-row"><span class="subtask-dot ${sdCls}"></span><span class="subtask-name">${esc(st.n)}</span><span class="subtask-date">${fmt(st.ad)}</span></div>`;
+          });
+          subsHTML+='</div>';
+          treeHTML+=`<div class="main-task">
+            <div class="main-task-header" onclick="toggleSubs('subs_${uid}','tog_${uid}')">
+              <span class="task-toggle" id="tog_${uid}">▶</span>
+              <span class="main-task-dot ${mDotCls}"></span>
+              <span class="main-task-name">${esc(task.n)}</span>
+              <span class="main-task-date">${fmt(task.ad)}</span>
+            </div>
+            ${subsHTML}
+          </div>`;
+        } else {
+          treeHTML+=`<div class="main-task">
+            <div class="main-task-header" style="cursor:default;">
+              <span style="width:14px;flex-shrink:0;"></span>
+              <span class="main-task-dot ${mDotCls}"></span>
+              <span class="main-task-name">${esc(task.n)}</span>
+              <span class="main-task-date">${fmt(task.ad)}</span>
+            </div>
+          </div>`;
+        }
+      }
+      i++;
+    }
+    treeHTML+='</div>';
+
+    const el=document.createElement('div');
+    el.className='card';
+    el.innerHTML=`
+      <div class="card-header">
+        <div><div class="card-title">${esc(area.name)}</div><div class="card-sub">${area.id} · ${area.type}</div></div>
+        <span class="card-badge ${bCls}">${bTxt}</span>
+      </div>
+      <div class="card-body">
+        <div class="prog-label"><span>Overall completion</span><span>${p}%</span></div>
+        <div class="prog-track"><div class="prog-fill ${fCls}" style="width:${p}%"></div></div>
+        ${treeHTML}
+      </div>
+      <div class="card-footer">
+        <span>Completion: <strong>${fmt(area.adjEnd)}</strong></span>
+        <span>${done}/${area.tasks.length} tasks done</span>
+      </div>`;
+    grid.appendChild(el);
+  });
+}
+function toggleSubs(subsId,togId){
+  const subs=document.getElementById(subsId);
+  const tog=document.getElementById(togId);
+  if(!subs)return;
+  const open=subs.classList.toggle('open');
+  if(tog) tog.classList.toggle('open',open);
+}
+
+/* ── COMMENTS ── */
+function renderComments(){
+  const grid=document.getElementById('commentsGrid');
+  grid.innerHTML='';
+  if(!comments||comments.length===0){
+    grid.innerHTML='<p style="font-size:.82rem;color:var(--text-muted);padding:1rem 0;">No comments yet. Be the first to add one above.</p>';
+    return;
+  }
+  const sorted=[...comments].sort((a,b)=>{
+    const po={high:0,medium:1,low:2,info:3};
+    return (po[a.priority]||1)-(po[b.priority]||1);
+  });
+  sorted.forEach(cmt=>{
+    const pLabel={high:'🔴 High',medium:'🟡 Medium',low:'🟢 Low',info:'🔵 Info'}[cmt.priority]||'Comment';
+    const ts=cmt.ts?new Date(cmt.ts).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+    const div=document.createElement('div');
+    div.className=`comment-card priority-${cmt.priority}`;
+    div.innerHTML=`
+      <div class="comment-actions">
+        ${_authenticated?`<button class="btn-comment-del" onclick="deleteComment('${cmt.id}')" title="Delete (admin only)">✕</button>`:''}
+      </div>
+      <div class="comment-header">
+        <div class="comment-meta">
+          <span class="comment-priority">${pLabel}</span>
+          <span class="comment-area">${esc(cmt.area)}</span>
+        </div>
+      </div>
+      <div class="comment-text">${esc(cmt.text)}</div>
+      <div class="comment-footer">
+        <span class="comment-footer-item">Added by: <strong>${esc(cmt.author)}</strong></span>
+        ${cmt.actionBy?`<span class="comment-footer-item">Action by: <strong>${esc(cmt.actionBy)}</strong></span>`:''}
+        ${cmt.targetDate?`<span class="comment-footer-item">Target: <strong>${fmt(cmt.targetDate)}</strong></span>`:''}
+        <span class="comment-timestamp">${ts}</span>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+/* Submit comment — open to all */
+document.getElementById('btnSubmitComment').addEventListener('click',()=>{
+  const author=document.getElementById('cmtAuthor').value.trim();
+  const area=document.getElementById('cmtArea').value.trim();
+  const text=document.getElementById('cmtText').value.trim();
+  const priority=document.getElementById('cmtPriority').value;
+  const actionBy=document.getElementById('cmtActionBy').value.trim();
+  const targetDate=document.getElementById('cmtTargetDate').value;
+  if(!author){toast('⚠ Please enter your name');return;}
+  if(!area){toast('⚠ Please enter an area or reference');return;}
+  if(!text){toast('⚠ Please enter a comment');return;}
+  const newCmt={
+    id:'c'+(_cmtIdCounter++),
+    author,area,text,priority,
+    actionBy:actionBy||'',
+    targetDate:targetDate||'',
+    ts:new Date().toISOString()
+  };
+  comments.push(newCmt);
+  // Clear form
+  ['cmtAuthor','cmtArea','cmtText','cmtActionBy','cmtTargetDate'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cmtPriority').value='medium';
+  saveState();
+  renderComments();
+  toast('✓ Comment submitted');
+});
+
+/* Delete comment — admin only */
+function deleteComment(id){
+  if(!_authenticated){toast('🔒 Only the admin can delete comments');return;}
+  openConfirm('Delete Comment','Remove this comment permanently?',()=>{
+    comments=comments.filter(c=>c.id!==id);
+    saveState();
+    renderComments();
+    toast('✓ Comment removed');
+  });
+}
+
+/* ── GANTT ── */
+function renderGantt(){
+  const wrap=document.getElementById('ganttWrap');
+  const gS=new Date('2026-02-01'),gE=new Date('2026-06-30');
+  const tot=daysBetween(gS,gE);
+  const tPct=daysBetween(gS,TODAY)/tot*100;
+  const rows=[
+    ...areas.map(a=>({l:a.name,s:a.tasks[0]?.ad||a.adjEnd,e:a.adjEnd,c:a.type==='Suite'?'#1B3A6B':'#6B4C1A'})),
+    {l:'Main Reticulation',s:'2026-02-03',e:'2026-04-08',c:'#3D6B52'},
+    {l:'New Plant Room',s:'2026-02-07',e:'2026-04-13',c:'#3D6B52'},
+    {l:'External Landscaping',s:'2026-03-31',e:'2026-06-16',c:'#5A6B4A'},
+  ];
+  const months=[];
+  let cur=new Date('2026-02-01');
+  while(cur<=gE){
+    months.push({l:cur.toLocaleString('default',{month:'short'})+"'"+(cur.getFullYear()+'').slice(2),p:daysBetween(gS,cur)/tot*100});
+    cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+  }
+  // Calculate today's left offset (accounts for label width + right margin)
+  const ganttLeftPad = 200; // matches .gantt-label width in px
+  const ganttRightPad = 65; // matches end-label width + margin in px
+
+  let h=`<div class="gantt-wrap">`;
+
+  // Full-height TODAY overlay — positioned over the track area using padding offsets
+  h+=`<div class="gantt-today-overlay" id="ganttTodayOverlay" style="left:0;"></div>`;
+  h+=`<div class="gantt-today-flag" id="ganttTodayFlag" style="left:0;">TODAY</div>`;
+
+  h+=`<div class="gantt-month-hdr">`;
+  months.forEach(m=>{h+=`<div style="position:absolute;left:${m.p}%;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:600;color:var(--text-muted);white-space:nowrap;">${m.l}</div>`;});
+  h+=`</div>`;
+  rows.forEach(r=>{
+    const s=Math.max(0,daysBetween(gS,new Date(r.s))/tot*100);
+    const e=Math.min(100,daysBetween(gS,new Date(r.e))/tot*100);
+    const w=Math.max(0.5,e-s);
+    h+=`<div class="gantt-row"><div class="gantt-label">${esc(r.l)}</div><div class="gantt-track"><div class="gantt-bar" style="left:${s}%;width:${w}%;background:${r.c};opacity:.85;"></div><div class="gantt-today-line" style="left:${tPct}%;"></div></div><div class="gantt-end-label">${fmt(r.e)}</div></div>`;
+  });
+  h+=`</div>`;  // close gantt-wrap
+  wrap.innerHTML=h;
+
+  // Position the full-height overlay after render (needs actual DOM dimensions)
+  requestAnimationFrame(()=>{
+    const wrapEl=document.getElementById('ganttWrap').querySelector('.gantt-wrap');
+    const overlay=document.getElementById('ganttTodayOverlay');
+    const flag=document.getElementById('ganttTodayFlag');
+    if(!wrapEl||!overlay||!flag)return;
+    const wrapRect=wrapEl.getBoundingClientRect();
+    // Find any gantt-track to get its left offset
+    const track=wrapEl.querySelector('.gantt-track');
+    if(!track)return;
+    const trackRect=track.getBoundingClientRect();
+    const trackW=trackRect.width;
+    const trackLeft=trackRect.left-wrapRect.left;
+    const todayPx=trackLeft+(tPct/100)*trackW;
+    overlay.style.left=todayPx+'px';
+    flag.style.left=todayPx+'px';
+  });
+}
+
+/* ═══════════════════════════════════════════
+   INLINE DATE EDITING (milestones table)
+═══════════════════════════════════════════ */
+function handleDateClick(el,areaId){
+  if(!editMode)return;
+  const inp=el.nextElementSibling.nextElementSibling;
+  el.style.display='none';
+  inp.style.display='inline-block';
+  inp.focus();
+}
+function hideInlineInput(inp){
+  inp.style.display='none';
+  inp.previousElementSibling.previousElementSibling.style.display='';
+}
+function handleInlineChange(inp,areaId){
+  const val=inp.value;if(!val)return;
+  const area=areas.find(a=>a.id===areaId);
+  // Update the last main task to match the new area end date
+  const mainTasks=area.tasks.filter(t=>t.type==='main');
+  if(mainTasks.length>0) mainTasks[mainTasks.length-1].ad=val;
+  area.adjEnd=val;
+  renderAll();saveState();
+  if(document.getElementById('areaSelect').value===areaId) populatePanel(areaId);
+  toast('↕ Completion date updated');
+}
+
+/* ═══════════════════════════════════════════
+   EDIT PANEL
+═══════════════════════════════════════════ */
+function rebuildPanelSelect(keepId){
+  const sel=document.getElementById('areaSelect');
+  sel.innerHTML='';
+  areas.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=a.name+' ('+a.type+')';sel.appendChild(o);});
+  if(keepId&&areas.find(a=>a.id===keepId)) sel.value=keepId;
+  else if(areas.length>0) sel.value=areas[0].id;
+}
+document.getElementById('areaSelect').addEventListener('change',function(){populatePanel(this.value);});
+
+function populatePanel(areaId){
+  if(!areaId)return;
+  document.getElementById('areaSelect').value=areaId;
+  const area=areas.find(a=>a.id===areaId);
+  if(!area)return;
+  const orig=ORIG.find(a=>a.id===areaId);
+  const isNew=!orig;
+  const flds=document.getElementById('epFields');
+  flds.innerHTML='';
+
+  // Area dates
+  flds.innerHTML+=`<div class="ep-group">
+    <div class="ep-group-title">Area Completion Date</div>
+    <div class="ep-field"><label>Completion (auto-syncs from tasks)</label>
+      <input type="date" value="${area.adjEnd}" disabled style="background:var(--cream);color:var(--text-muted);" title="Set via task dates below">
+    </div>
+  </div>`;
+
+  // Tasks tree
+  flds.innerHTML+=`<div class="ep-group"><div class="ep-group-title" style="display:flex;justify-content:space-between;align-items:center;"><span>Tasks (${area.tasks.length} total)</span><span style="font-size:.6rem;color:var(--text-muted);font-weight:400;">⠿ drag to reorder</span></div>`;
+  flds.innerHTML+=`<div class="ep-tasks-list" id="epTasksList_${areaId}">`;
+  area.tasks.forEach((task,i)=>{
+    const oad=orig?.tasks[i]?.ad||task.ad;
+    const isMain=task.type==='main';
+    const hasSubs=isMain&&getSubTasks(area,i).length>0;
+    const dateDisabled=hasSubs;
+    flds.innerHTML+=`<div class="ep-task-row" id="eprow_${areaId}_${i}" draggable="true" data-area="${areaId}" data-idx="${i}">
+      <div class="ep-task-header">
+        <span class="ep-drag-handle" title="Drag to reorder">⠿</span>
+        <span class="ep-task-type ${isMain?'type-main':'type-sub'}">${isMain?'Main':'Sub'}</span>
+        <input class="ep-task-name-inp" type="text" value="${task.n.replace(/"/g,'&quot;')}" placeholder="Task name" onchange="setTaskName('${areaId}',${i},this.value)">
+      </div>
+      <div class="ep-task-controls">
+        <input type="date" draggable="false" class="ep-task-date${task.ad!==oad&&!isNew?' changed':''}" value="${task.ad}" ${dateDisabled?'disabled title="Auto-calculated from subtasks"':''} onchange="setTaskDate('${areaId}',${i},this.value,this)">
+        <select draggable="false" class="ep-task-status" onchange="setTaskStatus('${areaId}',${i},this.value)">
+          <option value="Not Started" ${task.s==='Not Started'?'selected':''}>Not Started</option>
+          <option value="In Progress"  ${task.s==='In Progress'||task.s==='In Process'?'selected':''}>In Progress</option>
+          <option value="On Hold"      ${task.s==='On Hold'?'selected':''}>On Hold</option>
+          <option value="Completed"    ${task.s==='Completed'?'selected':''}>Completed</option>
+          <option value="Snagged"      ${task.s==='Snagged'?'selected':''}>Snagged</option>
+          <option value="Cancelled"    ${task.s==='Cancelled'?'selected':''}>Cancelled</option>
+        </select>
+        <select draggable="false" class="ep-task-type-sel" onchange="setTaskType('${areaId}',${i},this.value)">
+          <option value="main" ${isMain?'selected':''}>Main Task</option>
+          <option value="sub" ${!isMain?'selected':''}>Subtask</option>
+        </select>
+        <button draggable="false" class="btn-rm-task" onclick="removeTask('${areaId}',${i})">&#x2715;</button>
+      </div>
+    </div>`;
+  });
+  flds.innerHTML+=`</div><button class="btn-add-task" onclick="openAddTaskModal('${areaId}')">+ Add Task / Subtask</button></div>`;
+
+  // Danger zone
+  flds.innerHTML+=`<div class="ep-divider"></div>
+  <button class="btn-del-area" onclick="deleteArea('${areaId}')">&#x2715; Remove This Area</button>`;
+  // Init drag after DOM is updated
+  requestAnimationFrame(()=>initTaskDrag(areaId));
+}
+
+function setTaskName(id,idx,val){
+  const area=areas.find(a=>a.id===id);
+  area.tasks[idx].n=val;
+  renderAll();saveState();
+}
+function setTaskDate(id,idx,val,el){
+  if(!val)return;
+  const area=areas.find(a=>a.id===id);
+  area.tasks[idx].ad=val;
+  // If this is a subtask, recalculate its parent main task date
+  if(area.tasks[idx].type==='sub'){
+    // Find parent main task
+    for(let m=idx-1;m>=0;m--){
+      if(area.tasks[m].type==='main'){syncMainTaskDate(area,m);break;}
+    }
+  }
+  renderAll();saveState();
+  populatePanel(id);
+  toast('↕ Date updated & re-sorted');
+}
+function setTaskStatus(id,idx,val){
+  const area=areas.find(a=>a.id===id);
+  area.tasks[idx].s=val;
+  renderAll();saveState();populatePanel(id);toast('✓ Status updated');
+}
+function setTaskType(id,idx,val){
+  const area=areas.find(a=>a.id===id);
+  area.tasks[idx].type=val;
+  renderAll();saveState();populatePanel(id);toast('✓ Task type updated');
+}
+function removeTask(areaId,idx){
+  const area=areas.find(a=>a.id===areaId);
+  if(area.tasks.length<=1){toast('⚠ Cannot remove the last task');return;}
+  openConfirm('Remove Task',`Remove "${area.tasks[idx].n}"?`,()=>{
+    area.tasks.splice(idx,1);
+    renderAll();saveState();populatePanel(areaId);toast('✓ Task removed');
+  });
+}
+
+/* Add task modal */
+let _addTaskTargetId=null;
+function openAddTaskModal(areaId){
+  _addTaskTargetId=areaId;
+  const area=areas.find(a=>a.id===areaId);
+  document.getElementById('addTaskSubtitle').textContent='Adding to: '+area.name;
+  document.getElementById('newTaskName').value='';
+  document.getElementById('newTaskType').value='main';
+  document.getElementById('newTaskDate').value=area.adjEnd||'';
+  document.getElementById('newTaskStatus').value='Not Started';
+  document.getElementById('addTaskModal').classList.add('show');
+  setTimeout(()=>document.getElementById('newTaskName').focus(),60);
+}
+document.getElementById('btnCancelAddTask').addEventListener('click',()=>document.getElementById('addTaskModal').classList.remove('show'));
+document.getElementById('btnConfirmAddTask').addEventListener('click',()=>{
+  const nm=document.getElementById('newTaskName').value.trim();
+  const type=document.getElementById('newTaskType').value;
+  const ad=document.getElementById('newTaskDate').value;
+  const st=document.getElementById('newTaskStatus').value;
+  if(!nm){toast('⚠ Please enter a task name');return;}
+  const area=areas.find(a=>a.id===_addTaskTargetId);
+  const newId='t'+(Date.now()+'').slice(-6);
+  area.tasks.push({id:newId,n:nm,type,s:st,ad:ad||area.adjEnd});
+  document.getElementById('addTaskModal').classList.remove('show');
+  renderAll();saveState();populatePanel(_addTaskTargetId);
+  toast('✓ Task added');
+});
+
+/* Delete area */
+function deleteArea(areaId){
+  const area=areas.find(a=>a.id===areaId);
+  openConfirm('Remove Area',`Remove "${area.name}" from the programme?`,()=>{
+    areas=areas.filter(a=>a.id!==areaId);
+    rebuildPanelSelect('');
+    if(areas.length>0) populatePanel(areas[0].id);
+    else document.getElementById('epFields').innerHTML='<p style="font-size:.8rem;color:var(--text-muted);text-align:center;padding:2rem 0;">No areas.</p>';
+    renderAll();saveState();toast('✓ Area removed');
+  });
+}
+
+/* Add area modal */
+let _modalTaskCount=0;
+function addModalTaskRow(name='',date='',type='main'){
+  _modalTaskCount++;
+  const id='mpt'+_modalTaskCount;
+  const div=document.createElement('div');
+  div.className='modal-task-item';div.id=id;
+  div.innerHTML=`<input type="text" placeholder="Task name" value="${name.replace(/"/g,'&quot;')}">
+    <input type="date" value="${date}">
+    <select><option value="main" ${type==='main'?'selected':''}>Main</option><option value="sub" ${type==='sub'?'selected':''}>Sub</option></select>
+    <button class="btn-rm-task" onclick="document.getElementById('${id}').remove()">&#x2715;</button>`;
+  document.getElementById('newAreaPhases').appendChild(div);
+}
+document.getElementById('btnOpenAddArea').addEventListener('click',()=>{
+  document.getElementById('newAreaName').value='';
+  document.getElementById('newAreaType').value='Suite';
+  document.getElementById('newAreaAdj').value='';
+  document.getElementById('newAreaPhases').innerHTML='';
+  _modalTaskCount=0;
+  addModalTaskRow('Construction Works','','main');
+  addModalTaskRow('Finishes & Fit-out','','main');
+  addModalTaskRow("Builder's Clean & Snag",'','main');
+  document.getElementById('addAreaModal').classList.add('show');
+  setTimeout(()=>document.getElementById('newAreaName').focus(),60);
+});
+document.getElementById('btnAddModalTask').addEventListener('click',()=>addModalTaskRow());
+document.getElementById('btnCancelAddArea').addEventListener('click',()=>document.getElementById('addAreaModal').classList.remove('show'));
+document.getElementById('btnConfirmAddArea').addEventListener('click',()=>{
+  const name=document.getElementById('newAreaName').value.trim();
+  const type=document.getElementById('newAreaType').value;
+  const adj=document.getElementById('newAreaAdj').value;
+  if(!name){toast('⚠ Please enter an area name');return;}
+  if(!adj){toast('⚠ Please set a completion date');return;}
+  const taskRows=document.querySelectorAll('#newAreaPhases .modal-task-item');
+  const tasks=[];
+  taskRows.forEach(row=>{
+    const inputs=row.querySelectorAll('input');
+    const sel=row.querySelector('select');
+    const n=inputs[0].value.trim();
+    const dt=inputs[1].value;
+    const tp=sel?sel.value:'main';
+    if(n) tasks.push({id:'t'+(Date.now()+Math.random()).toString(36).slice(-6),n,type:tp,s:'In Process',ad:dt||adj});
+  });
+  if(tasks.length===0){toast('⚠ Add at least one task');return;}
+  const rawId=name.toUpperCase().replace(/[^A-Z0-9]/g,'_').slice(0,12)+'_'+(Date.now()+'').slice(-4);
+  areas.push({id:rawId,name,type,adjEnd:adj,tasks,comments:[]});
+  document.getElementById('addAreaModal').classList.remove('show');
+  renderAll();saveState();
+  rebuildPanelSelect(rawId);
+  populatePanel(rawId);
+  toast('✓ "'+name+'" added');
+});
+
+/* Panel buttons */
+document.getElementById('btnApply').addEventListener('click',()=>{
+  renderAll();saveState();
+  const id=document.getElementById('areaSelect').value;
+  if(id) populatePanel(id);
+  toast('✓ Applied & saved');
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  const id=document.getElementById('areaSelect').value;
+  const origArea=ORIG.find(a=>a.id===id);
+  if(!origArea){toast('⚠ New areas cannot be reset');return;}
+  const i=areas.findIndex(a=>a.id===id);
+  areas[i]=JSON.parse(JSON.stringify(origArea));
+  renderAll();saveState();populatePanel(id);toast('↺ Area reset');
+});
+document.getElementById('btnResetAll').addEventListener('click',()=>{
+  openConfirm('Reset All Data','Reset ALL areas, tasks and open items to the original programme data? This cannot be undone.',()=>{
+    areas=JSON.parse(JSON.stringify(ORIG));
+    comments=JSON.parse(JSON.stringify(ORIG_COMMENTS));
+    _cmtIdCounter=8;
+    dbRef.set({areas,comments,cmtCounter:_cmtIdCounter}).then(()=>{
+      rebuildPanelSelect('');
+      if(areas.length>0) populatePanel(areas[0].id);
+      renderAll();toast('↺ All data reset');
+    });
+  });
+});
+
+/* ═══════════════════════════════════════════
+   DRAG TO REORDER TASKS
+   — Only the handle initiates drag
+   — Events delegated on container so child
+     inputs/selects don't swallow drops
+═══════════════════════════════════════════ */
+let _dragSrcIdx = null;
+let _dragAreaId = null;
+let _dragOverRow = null;
+
+function initTaskDrag(areaId){
+  const list = document.getElementById('epTasksList_' + areaId);
+  if(!list) return;
+
+  // All rows are draggable; dragstart cancels unless the handle was the origin
+  list.querySelectorAll('.ep-task-row').forEach(row=>{
+    row.setAttribute('draggable','true');
+  });
+
+  list.addEventListener('dragstart', e=>{
+    // Only allow drag when initiated from the ⠿ handle
+    if(!e.target.closest('.ep-drag-handle')){
+      e.preventDefault();
+      return;
+    }
+    const row = e.target.closest('.ep-task-row');
+    if(!row) return;
+    _dragSrcIdx = parseInt(row.dataset.idx);
+    _dragAreaId = row.dataset.area;
+    row.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(_dragSrcIdx));
+  });
+
+  list.addEventListener('dragend', ()=>{
+    list.querySelectorAll('.ep-task-row').forEach(r=>r.classList.remove('dragging','drag-over'));
+    _dragOverRow = null;
+  });
+
+  list.addEventListener('dragover', e=>{
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const row = e.target.closest('.ep-task-row');
+    if(row === _dragOverRow) return;
+    list.querySelectorAll('.ep-task-row').forEach(r=>r.classList.remove('drag-over'));
+    if(row){ row.classList.add('drag-over'); _dragOverRow = row; }
+  });
+
+  list.addEventListener('dragleave', e=>{
+    if(!list.contains(e.relatedTarget)){
+      list.querySelectorAll('.ep-task-row').forEach(r=>r.classList.remove('drag-over'));
+      _dragOverRow = null;
+    }
+  });
+
+  list.addEventListener('drop', e=>{
+    e.preventDefault();
+    list.querySelectorAll('.ep-task-row').forEach(r=>r.classList.remove('drag-over'));
+    const targetRow = e.target.closest('.ep-task-row');
+    if(!targetRow) return;
+    const targetIdx = parseInt(targetRow.dataset.idx);
+    if(_dragSrcIdx === null || _dragSrcIdx === targetIdx || _dragAreaId !== areaId) return;
+    const area = areas.find(a=>a.id===areaId);
+    const moved = area.tasks.splice(_dragSrcIdx, 1)[0];
+    // After splice, moving forward means target shifted down by 1
+    const insertAt = targetIdx > _dragSrcIdx ? targetIdx - 1 : targetIdx;
+    area.tasks.splice(insertAt, 0, moved);
+    syncAllMainDates(area);
+    syncAreaEnd(area);
+    renderAll();
+    saveState();
+    populatePanel(areaId);
+    toast('✓ Task reordered');
+    _dragSrcIdx = null;
+    _dragAreaId = null;
+    _dragOverRow = null;
+  });
+}
+
+/* ═══════════════════════════════════════════
+   CONFIRM MODAL
+═══════════════════════════════════════════ */
+let _confirmCb=null;
+function openConfirm(title,msg,cb){
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmMsg').textContent=msg;
+  _confirmCb=cb;
+  document.getElementById('confirmModal').classList.add('show');
+}
+document.getElementById('btnConfirmYes').addEventListener('click',()=>{
+  document.getElementById('confirmModal').classList.remove('show');
+  if(_confirmCb){_confirmCb();_confirmCb=null;}
+});
+document.getElementById('btnConfirmNo').addEventListener('click',()=>{
+  document.getElementById('confirmModal').classList.remove('show');
+  _confirmCb=null;
+});
+
+/* ═══════════════════════════════════════════
+   PDF EXPORT
+═══════════════════════════════════════════ */
+document.getElementById('openPdf').addEventListener('click',()=>document.getElementById('pdfOverlay').classList.add('show'));
+document.getElementById('cancelPdf').addEventListener('click',()=>document.getElementById('pdfOverlay').classList.remove('show'));
+document.getElementById('doPrint').addEventListener('click',()=>{
+  const scope=document.querySelector('input[name="pdf-scope"]:checked').value;
+  document.getElementById('pdfOverlay').classList.remove('show');
+  const mil=document.querySelector('.milestones-section');
+  const cards=document.querySelector('.cards-section');
+  const cmts=document.querySelector('.comments-section');
+  const gantt=document.querySelector('.timeline-section');
+  [mil,cards,cmts,gantt].forEach(el=>{if(el)el.style.display='';});
+  if(scope==='summary'){if(cards)cards.style.display='none';if(gantt)gantt.style.display='none';if(cmts)cmts.style.display='none';}
+  else if(scope==='cards'){if(mil)mil.style.display='none';if(gantt)gantt.style.display='none';if(cmts)cmts.style.display='none';}
+  else if(scope==='gantt'){if(mil)mil.style.display='none';if(cards)cards.style.display='none';if(cmts)cmts.style.display='none';}
+  else if(scope==='comments'){if(mil)mil.style.display='none';if(cards)cards.style.display='none';if(gantt)gantt.style.display='none';}
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{[mil,cards,cmts,gantt].forEach(el=>{if(el)el.style.display='';});},600);
+  },200);
+});
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2300);
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+(async function init(){
+  const loading = document.getElementById('fb-loading');
+
+  try {
+    await loadState();
+  } catch(e) {
+    console.error('loadState error:', e);
+  }
+
+  // Always hide loading screen regardless of Firebase outcome
+  if(loading){
+    loading.style.transition = 'opacity .5s';
+    loading.style.opacity = '0';
+    setTimeout(()=>{ loading.style.display = 'none'; }, 520);
+  }
+
+  try {
+    renderAll();
+  } catch(e) {
+    console.error('renderAll error:', e);
+  }
+
+  startRealtimeSync();
+
+  // Restore editor auth UI if session active
+  if(_authenticated){
+    document.getElementById('pwSession').classList.add('show');
+  }
+})();
+</script>
+</body>
+</html>
